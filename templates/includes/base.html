@@ -1,0 +1,59 @@
+{% load static %}
+{% include 'includes/header.html' %}
+{% include 'includes/footer.html' %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>{% block title %}YAAS{% endblock %}</title>
+</head>
+<body>
+
+<header id="header" class="page-topbar">
+    <!-- start header nav-->
+    <div class="navbar-fixed">
+        <nav class="navbar-color">
+            <div class="nav-wrapper">
+                <ul class="left">
+                    <li><h1 class="logo-wrapper"><a href="{% url 'account:index' %}" class="brand-logo darken-1"><img
+                            src="{% static '' %}images/yaas-1.jpeg" alt="logo"
+                            style="position: absolute; top: -10px"></a> <span
+                            class="logo-text">YAAS</span>
+                    </h1></li>
+                </ul>
+                <div class="header-search-wrapper hide-on-med-and-down">
+                    <i class="mdi-action-search"></i>
+                    <input type="text" name="Search" class="header-search-input z-depth-2"
+                           placeholder="Search"/>
+                </div>
+                <ul class="right hide-on-med-and-down">
+                    <li><a href="javascript:void(0);" class="waves-effect waves-block waves-light toggle-fullscreen"><i
+                            class="mdi-action-settings-overscan"></i></a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+</header>
+
+<main>
+    {% block content %}
+    {% endblock %}
+</main>
+
+<footer class="page-footer" style="position: absolute; bottom: 0px; width: 100%">
+    <div class="footer-copyright">
+        <div class="container">
+            Copyright © 2019 <a class="grey-text text-lighten-4"
+                                href="http://themeforest.net/user/geekslabs/portfolio?ref=geekslabs" target="_blank">GeeksLabs</a>
+            All rights reserved.
+            <span class="right"> Design and Developed by <a class="grey-text text-lighten-4"
+                                                            href="http://geekslabs.com/">YAAS-Team</a></span>
+        </div>
+    </div>
+</footer>
+
+</body>
+
+</html>
