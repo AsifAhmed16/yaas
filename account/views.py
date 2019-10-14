@@ -12,8 +12,7 @@ def login(request):
 
 
 def register(request):
-    form = LoginForm
-    return render(request, 'account/register.html', {'form': form})
+    return render(request, 'account/register.html')
 
 
 def logout(request):
