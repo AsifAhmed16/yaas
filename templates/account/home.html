@@ -1,15 +1,70 @@
 {% extends 'includes/base.html' %}
-
-{% block title %}Home{% endblock %}
+{% load static %}
 
 {% block content %}
-    <div align="right">
-    {% if user.is_authenticated %}
-  Hi {{ user.username }}!
-  <p><a href="{% url 'account:logout' %}">logout</a></p>
-{% else %}
-  <p>Hi !!! <a href="{% url 'account:login' %}">Sign In</a> or <a href="{% url 'account:register' %}">Register</a></p>
+    <ul>
+        <li><a class="active" href="{% url 'account:logout' %}">Home</a></li>
+        <li><a href="#news">Auction</a></li>
+        {% if data.logged_in %}
+            <li style="float: right; color: white">
+                Hi {{ data.username }} !!! ||
+            </li>
+            <li style="float: right; color: white">
+                <a href="{% url 'account:change_email' %}"> Change Email </a>
+            </li>
+            <li style="float: right; color: white">
+                <a href="{% url 'account:change_password' %}"> Change Password </a>
+            </li>
+            <li style="float: right; color: white">
+                <a href="{% url 'account:logout' %}"> Logout </a>
+            </li>
+            {% else %}
+            <li style="float: right; color: white">
+                <a href="{% url 'account:login' %}">Sign In</a>
+            </li>
+            <li style="float: right; color: white">
+                <a href="{% url 'account:register' %}">Register</a>
+            </li>
+            {% endif %}
+        </li>
+    </ul>
 
-{% endif %}
+    <div>
+        {% if messages %}
+            {% for message in messages %}
+                <strong style="color: red">{{ message.message }}</strong>
+            {% endfor %}
+        {% endif %}
     </div>
+
+    <style>
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+        }
+
+        li {
+            float: left;
+        }
+
+        li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        li a:hover:not(.active) {
+            background-color: #111;
+        }
+
+        .active {
+            background-color: #4CAF50;
+        }
+    </style>
+
 {% endblock %}

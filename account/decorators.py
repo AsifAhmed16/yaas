@@ -3,7 +3,7 @@ from functools import wraps
 from django.contrib import messages
 from django.shortcuts import redirect
 from django.urls import resolve
-from .models import User, Privileged
+from .models import User
 
 
 def access_permission_required(view_func):
@@ -16,9 +16,9 @@ def access_permission_required(view_func):
             return render(request, 'account/login.html')
         user_profile = User.objects.get(id=user)
         role_id = user_profile.user_role_id
-        access = Privileged.objects.filter(userrole_id=role_id, moduleurl__url=view_function)
-        if not access.exists():
-            return redirect('account:register')
+        # access = Privileged.objects.filter(userrole_id=role_id, moduleurl__url=view_function)
+        # if not access.exists():
+        #     return redirect('account:register')
         response = view_func(request, *args, **kwargs)
         # maybe do something after the view_func call
         return response
