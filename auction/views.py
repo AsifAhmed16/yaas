@@ -20,7 +20,6 @@ def auction_add(request):
                     form = AuctionForm(request.POST, request.FILES or None)
                     if form.is_valid():
                         form = form.save(commit=False)
-
                         form.save()
                         messages.success(request, 'Auction Added')
                         return redirect('auction:auction_add')

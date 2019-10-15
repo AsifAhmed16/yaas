@@ -40,7 +40,7 @@
 <main>
 
     <ul>
-        <li><a class="active" href="{% url 'account:logout' %}">Home</a></li>
+        <li><a class="active" href="{% url 'account:index' %}">Home</a></li>
         <li><a href="{% url 'auction:auction_add' %}">Auction</a></li>
         {% if data.logged_in %}
             <li style="float: right; color: white">
