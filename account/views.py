@@ -56,6 +56,9 @@ def register(request):
             if User.objects.filter(username=username).exists():
                 messages.error(request, 'That username is already taken.')
                 return render(request, 'account/register.html')
+            if User.objects.filter(email=email).exists():
+                messages.error(request, 'That email id is already taken.')
+                return render(request, 'account/register.html')
             User.objects.create(username=username, password=password, email=email, role=Role.objects.get(id=2))
         except Exception as ex:
             print(ex)
