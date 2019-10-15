@@ -38,21 +38,73 @@
 </header>
 
 <main>
+
+    <ul>
+        <li><a class="active" href="{% url 'account:logout' %}">Home</a></li>
+        <li><a href="{% url 'auction:auction_add' %}">Auction</a></li>
+        {% if data.logged_in %}
+            <li style="float: right; color: white">
+                <a href="{% url 'account:change_email' %}"> Change Email </a>
+            </li>
+            <li style="float: right; color: white">
+                <a href="{% url 'account:change_password' %}"> Change Password </a>
+            </li>
+            <li style="float: right; color: white">
+                <a href="{% url 'account:logout' %}"> Logout </a>
+            </li>
+        {% else %}
+            <li style="float: right; color: white">
+                <a href="{% url 'account:login' %}">Sign In</a>
+            </li>
+            <li style="float: right; color: white">
+                <a href="{% url 'account:register' %}">Register</a>
+            </li>
+        {% endif %}
+    </ul>
+
     {% block content %}
     {% endblock %}
-</main>
 
-<footer class="page-footer" style="position: absolute; bottom: 0px; width: 100%">
-    <div class="footer-copyright">
-        <div class="container">
-            Copyright © 2019 <a class="grey-text text-lighten-4"
-                                href="http://themeforest.net/user/geekslabs/portfolio?ref=geekslabs" target="_blank">GeeksLabs</a>
-            All rights reserved.
-            <span class="right"> Design and Developed by <a class="grey-text text-lighten-4"
-                                                            href="http://geekslabs.com/">YAAS-Team</a></span>
-        </div>
-    </div>
-</footer>
+{#    <footer class="page-footer">#}
+{#        <div class="footer-copyright">#}
+{#            <div class="container">#}
+{#                Copyright © 2019 <a class="grey-text text-lighten-4"#}
+{#                                    href="http://themeforest.net/user/geekslabs/portfolio?ref=geekslabs"#}
+{#                                    target="_blank">GeeksLabs</a>#}
+{#                All rights reserved.#}
+{#                <span class="right"> Design and Developed by <a class="grey-text text-lighten-4"#}
+{#                                                                href="http://geekslabs.com/">YAAS-Team</a></span>#}
+{#            </div>#}
+{#        </div>#}
+{#    </footer>#}
+
+    <style>
+        ul {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+        }
+
+        li {
+            float: left;
+        }
+
+        li a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        li a:hover:not(.active) {
+            background-color: #111;
+        }
+    </style>
+
+</main>
 
 </body>
 
