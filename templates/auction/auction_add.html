@@ -15,7 +15,7 @@
                                 <form action="" class="col s12" method="post" enctype="multipart/form-data">
                                     {% csrf_token %}
                                     {% for field in form %}
-                                        {% if field.label != "Charge type" and field.label != "Charge amount" and field.label != "Vat charge type" and field.label != "Vat charge amount" and field.label != "Agent commission type" and field.label != "Agent commission amount" and field.label != "Agent ait charge type" and field.label != "Agent ait charge amount" and field.label != "Distributor commission type" and field.label != "Distributor commission amount" and field.label != "Distributor ait charge type" and field.label != "Distributor ait charge amount" and field.label != "Mno commission type" and field.label != "Mno commission amount" and field.label != "Mno ait charge type" and field.label != "Mno ait charge amount" and field.label != "Sms charge type" and field.label != "Sms charge amount" %}
+                                        {% if field.label != "Deadline" %}
                                             <div class="input-field col s12">
                                                 <label for="{{ field.id_for_label }}">{{ field.label }} <span
                                                         class="text-danger">*</span></label>
@@ -23,6 +23,7 @@
                                             </div>
                                         {% endif %}
                                     {% endfor %}
+                                    <input id="datetimepicker" type="text">
                                     <div class="row">
                                         <div class="input-field col s12">
                                             <button class="btn cyan waves-effect waves-light right" type="submit"
@@ -39,5 +40,11 @@
             </div>
         </div>
     </div>
+
+    <script>
+        $(function () {
+            $("#datetimepicker").datetimepicker();
+        });
+    </script>
 
 {% endblock %}
