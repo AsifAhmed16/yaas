@@ -6,6 +6,11 @@
         <div class="section">
             <p class="caption">Add an auction.</p>
             <div class="divider"></div>
+            {% if messages %}
+                {% for message in messages %}
+                    <strong style="color: red">{{ message.message }}</strong>
+                {% endfor %}
+            {% endif %}
             <div id="basic-form" class="section">
                 <div class="row">
                     <div class="col s8 m8 16" style="float: right">
@@ -23,7 +28,10 @@
                                             </div>
                                         {% endif %}
                                     {% endfor %}
-                                    <input id="datetimepicker" type="text">
+                                    {#                                    <div class="input-field col s12">#}
+                                    {#                                        <label for="datetimepicker">Deadline <span class="text-danger">*</span></label>#}
+                                    {#                                        <input id="datetimepicker" type="text">#}
+                                    {#                                    </div>#}
                                     <div class="row">
                                         <div class="input-field col s12">
                                             <button class="btn cyan waves-effect waves-light right" type="submit"
@@ -41,10 +49,10 @@
         </div>
     </div>
 
-    <script>
-        $(function () {
-            $("#datetimepicker").datetimepicker();
-        });
-    </script>
+    {#    <script>#}
+    {#        $(function () {#}
+    {#            $("#datetimepicker").datetimepicker();#}
+    {#        });#}
+    {#    </script>#}
 
 {% endblock %}
