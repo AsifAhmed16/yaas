@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .forms import *
 from django.contrib import messages
 from datetime import datetime, timedelta
+from .tasks import demo_task
 
 
 def auction_add(request):
@@ -26,7 +27,7 @@ def auction_add(request):
                         form.deadline = datetime.now() + timedelta(days=3)
                         form.created_date = datetime.now()
                         form.save()
-                        messages.success(request, 'Auction Added')
+                        messages.success(request, 'A request mail has been sent...Please check your Email')
                         return redirect('account:index')
                     else:
                         print(form.errors)
@@ -36,6 +37,7 @@ def auction_add(request):
                         }
                         messages.error(request, 'Sorry...Something went wrong.')
                         return render(request, 'auction/auction_add.html', context)
+                _post_tasks(request)
                 return render(request, 'auction/auction_add.html', context)
             else:
                 messages.error(request, 'Please login before creating an auction.')
@@ -47,3 +49,9 @@ def auction_add(request):
         print(ex)
         messages.error(request, str(ex))
         return redirect('account:login')
+
+
+def _post_tasks(request):
+    message = "ok"
+    result = demo_task(message)
+    return result

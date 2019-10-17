@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'background_task',
     'account',
     'auction',
 ]
@@ -83,7 +84,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'yaas_db',
         'USER': 'root',
-        'PASSWORD': '000016',
+        'PASSWORD': '123456',
         'HOST': '127.0.0.1',
         'PORT': '',
     }
