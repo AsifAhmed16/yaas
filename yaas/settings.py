@@ -26,7 +26,7 @@ SECRET_KEY = 'ya-judt)7178(q5e$u9uatu3akad^u*u%5!z%@uyv8tmni$&y7'
 DEBUG = True
 
 ALLOWED_HOSTS = []
-
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
 
 # Application definition
 
@@ -84,7 +84,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'yaas_db',
         'USER': 'root',
-        'PASSWORD': '123456',
+        'PASSWORD': '000016',
         'HOST': '127.0.0.1',
         'PORT': '',
     }
@@ -113,6 +113,11 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'ahmed.as.if.16@gmail.com'
+EMAIL_HOST_PASSWORD = '73585212'
+EMAIL_PORT = 587
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/

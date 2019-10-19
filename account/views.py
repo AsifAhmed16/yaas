@@ -13,7 +13,6 @@ def index(request):
             context = {
                 'data': userdata
             }
-            print(context)
             return render(request, 'account/home.html', context)
     return render(request, 'account/home.html')
 

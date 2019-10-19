@@ -23,3 +23,16 @@ class Auction(models.Model):
 
     class Meta:
         db_table = 'Auction'
+
+
+class Auction_Temp(models.Model):
+    title = models.CharField(max_length=50)
+    description = models.CharField(max_length=3000)
+    seller = models.ForeignKey(User, on_delete=models.CASCADE)
+    min_price = models.DecimalField(max_digits=11, decimal_places=2)
+
+    def __str__(self):
+        return self.title
+
+    class Meta:
+        db_table = 'Auction_Temp'

@@ -13,3 +13,15 @@ class AuctionForm(forms.ModelForm):
             "min_price": forms.NumberInput(attrs={'class': 'form-control'}),
             # "deadline": forms.DateTimeInput(attrs={'placeholder': 'dd.mm.YY HH:MM:SS', 'required': 'required'}),
         }
+
+
+class AuctionTempForm(forms.ModelForm):
+    class Meta:
+        model = Auction_Temp
+        fields = '__all__'
+        exclude = ('seller', )
+        widgets = {
+            "title": forms.TextInput(attrs={'class': 'form-control'}),
+            "description": forms.Textarea(attrs={'class': 'form-control'}),
+            "min_price": forms.NumberInput(attrs={'class': 'form-control'}),
+        }

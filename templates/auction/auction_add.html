@@ -17,7 +17,8 @@
                         <div class="card-panel">
                             <h4 class="header2">Auction Form</h4>
                             <div class="row">
-                                <form action="" class="col s12" method="post" enctype="multipart/form-data">
+                                <form action="" class="col s12" method="post" enctype="multipart/form-data"
+                                      id="auction_form">
                                     {% csrf_token %}
                                     {% for field in form %}
                                         {% if field.label != "Deadline" %}
@@ -49,10 +50,38 @@
         </div>
     </div>
 
-    {#    <script>#}
-    {#        $(function () {#}
-    {#            $("#datetimepicker").datetimepicker();#}
-    {#        });#}
-    {#    </script>#}
+    <script>
+        $(document).ready(function () {
+            $("#auction_form").submit(function (event) {
+                event.preventDefault();
+                confirmMessage();
+            });
+        });
+
+        function confirmMessage() {
+            swal({
+                    title: "Auction Add",
+                    text: "Are you sure to create an auction?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes",
+                    cancelButtonText: "No",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                },
+                function(isConfirm){
+                if (!(isConfirm)) {
+                    swal("Auction not created.", "success");
+                } else {
+                    $("#auction_form").unbind('submit').submit();
+                }
+            });
+        }
+
+        {#        $(function () {#}
+        {#            $("#datetimepicker").datetimepicker();#}
+        {#        });#}
+    </script>
 
 {% endblock %}
