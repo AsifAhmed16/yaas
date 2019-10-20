@@ -1,20 +1,47 @@
 from django.shortcuts import render, redirect
 from .forms import *
 from django.contrib import messages
+from auction.models import Auction, Auction_Status
 
 
 def index(request):
+    display = Auction.objects.filter(status_id=Auction_Status.objects.get(status="Active").id)
+    context = dict()
+    context['display'] = display
+    if request.session['language']:
+        userdata = {
+            'language': request.session['language'],
+        }
+    else:
+        userdata = {
+            'language': "Eng",
+        }
+    context['data'] = userdata
+    if request.method == 'POST':
+        display = display.filter(title__icontains=request.POST['Search'])
+        context['display'] = display
+        if request.POST.get("eng"):
+            request.session['language'] = "Eng"
+            userdata = {
+                'language': "Eng",
+            }
+            context['data'] = userdata
+        elif request.POST.get("fin"):
+            request.session['language'] = "Fin"
+            userdata = {
+                'language': "Fin",
+            }
+            context['data'] = userdata
     if 'logged_in' in request.session:
         if request.session['logged_in'] is True:
             userdata = {
                 'username': request.session['username'],
                 'logged_in': request.session['logged_in'],
+                'language': request.session['language'],
             }
-            context = {
-                'data': userdata
-            }
+            context['data'] = userdata
             return render(request, 'account/home.html', context)
-    return render(request, 'account/home.html')
+    return render(request, 'account/home.html', context)
 
 
 def login(request):
@@ -40,6 +67,7 @@ def login_validate(request):
                 request.session['logged_in'] = True
                 request.session['username'] = user.username
                 request.session['id'] = user.pk
+                request.session['language'] = user.language
                 return redirect("account:index")
             else:
                 messages.error(request, 'Incorrect Password!')
@@ -63,7 +91,7 @@ def register(request):
             if User.objects.filter(email=email).exists():
                 messages.error(request, 'That email id is already taken.')
                 return render(request, 'account/register.html')
-            User.objects.create(username=username, password=password, email=email, role=Role.objects.get(id=2))
+            User.objects.create(username=username, password=password, email=email, role=Role.objects.get(id=2), language=request.session['language'])
         except Exception as ex:
             print(ex)
             messages.error(request, 'Sorry !!! Something Went Wrong.')
@@ -80,6 +108,7 @@ def change_email(request):
                 userdata = {
                     'username': request.session['username'],
                     'logged_in': request.session['logged_in'],
+                    'language': request.session['language'],
                 }
                 context = {
                     'data': userdata
@@ -113,6 +142,14 @@ def change_password(request):
     try:
         if 'logged_in' in request.session:
             if request.session['logged_in'] is True:
+                userdata = {
+                    'username': request.session['username'],
+                    'logged_in': request.session['logged_in'],
+                    'language': request.session['language'],
+                }
+                context = {
+                    'data': userdata
+                }
                 if request.method == 'POST':
                     current = request.POST['current']
                     new = request.POST['new']
@@ -130,7 +167,7 @@ def change_password(request):
                     else:
                         messages.error(request, 'Wrong Password')
                         return redirect('account:change_password')
-                return render(request, 'account/change_password.html')
+                return render(request, 'account/change_password.html', context)
         else:
             return redirect('account:login')
     except Exception as ex:

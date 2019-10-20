@@ -5,6 +5,7 @@ from datetime import datetime, timedelta
 from .tasks import set_deadline
 from django.core.mail import send_mail
 import socket
+from .models import *
 
 
 def auction_add(request):
@@ -14,7 +15,9 @@ def auction_add(request):
                 form = AuctionTempForm
                 userdata = {
                     'id': request.session['id'],
+                    'username': request.session['username'],
                     'logged_in': request.session['logged_in'],
+                    'language': request.session['language'],
                 }
                 context = {
                     'data': userdata,
@@ -51,6 +54,55 @@ def auction_add(request):
         return redirect('account:login')
 
 
+def auction_list(request):
+    if 'logged_in' in request.session:
+        if request.session['logged_in'] is True:
+            userdata = {
+                'id': request.session['id'],
+                'username': request.session['username'],
+                'logged_in': request.session['logged_in'],
+                'language': request.session['language'],
+            }
+            list = Auction.objects.filter(seller_id=request.session['id'], status_id=Auction_Status.objects.get(status="Active").id)
+            context = {
+                'data': userdata,
+                'list': list
+            }
+            return render(request, 'auction/auction_list.html', context)
+        else:
+            return redirect('account:login')
+    else:
+        return redirect('account:login')
+
+
+def auction_edit(request, id):
+    if 'logged_in' in request.session:
+        if request.session['logged_in'] is True:
+            auc_obj = Auction.objects.get(id=id)
+            form = AuctionForm(request.POST or None, instance=auc_obj)
+            userdata = {
+                'id': request.session['id'],
+                'username': request.session['username'],
+                'logged_in': request.session['logged_in'],
+                'language': request.session['language'],
+            }
+            context = {
+                'data': userdata,
+                'form': form
+            }
+            if request.method == 'POST':
+                if form.is_valid():
+                    form = form.save(commit=False)
+                    form.save()
+                    messages.success(request, 'Description Updated Successfully')
+                    return redirect('auction:auction_list')
+            return render(request, 'auction/auction_edit.html', context)
+        else:
+            return redirect('account:login')
+    else:
+        return redirect('account:login')
+
+
 def auction_confirm(request, id):
     try:
         temp = Auction_Temp.objects.get(pk=id)
@@ -64,7 +116,9 @@ def auction_confirm(request, id):
     form = AuctionTempForm(instance=temp)
     userdata = {
         'id': request.session['id'],
+        'username': request.session['username'],
         'logged_in': request.session['logged_in'],
+        'language': request.session['language'],
     }
     context = {
         'data': userdata,
@@ -92,7 +146,7 @@ def mail_notification(request, id, temp_auc):
     employeeobject = User.objects.get(id=id)
     mailbody = "Dear " + employeeobject.username + "," + '\n' + '\n' \
                + "Please go to the link below and confirm auction you made. " + '\n' + '\n' + \
-               "Link: " + "http://127.0.0.1:8000/auctionauction/create/" + str(temp_auc) + "" + '\n' + '\n'
+               "Link: " + "http://127.0.0.1:8009/auctionauction/create/" + str(temp_auc) + "" + '\n' + '\n'
     email = employeeobject.email
     mailbody = mailbody + '\n' + "Thanks." + '\n' + "YAAS Team."
     if is_connected():

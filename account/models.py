@@ -16,6 +16,7 @@ class User(models.Model):
     password = models.CharField(max_length=100)
     email = models.CharField(max_length=250, unique=True)
     role = models.ForeignKey(Role, on_delete=models.CASCADE, blank=True, null=True)
+    language = models.CharField(max_length=10, default="Eng")
 
     def __str__(self):
         return self.username

@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'background_task',
     'account',
     'auction',
+    'bid',
 ]
 
 MIDDLEWARE = [
@@ -84,7 +85,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'yaas_db',
         'USER': 'root',
-        'PASSWORD': '000016',
+        'PASSWORD': '123456',
         'HOST': '127.0.0.1',
         'PORT': '',
     }

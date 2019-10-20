@@ -4,7 +4,11 @@
 
     <div class="container">
         <div class="section">
-            <p class="caption">Add an auction.</p>
+            <p class="caption">Add an Auction.
+            <span style="float: right">
+                <a href="{% url 'auction:auction_list' %}">List of Auctions</a>
+            </span>
+            </p>
             <div class="divider"></div>
             {% if messages %}
                 {% for message in messages %}

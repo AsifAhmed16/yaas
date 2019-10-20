@@ -22,23 +22,44 @@
                             class="logo-text">YAAS</span>
                     </h1></li>
                 </ul>
-                <div class="header-search-wrapper hide-on-med-and-down">
-                    <i class="mdi-action-search"></i>
-                    <input type="text" name="Search" class="header-search-input z-depth-2"
-                           placeholder="Search"/>
-                </div>
-                <ul class="right hide-on-med-and-down">
-                    <li><a href="javascript:void(0);" class="waves-effect waves-block waves-light toggle-fullscreen"><i
-                            class="mdi-action-settings-overscan"></i></a>
-                    </li>
-                </ul>
+                <form action="{% url 'account:index' %}" method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <div class="header-search-wrapper hide-on-med-and-down">
+                        <i class="mdi-action-search"></i>
+                        <input type="text" name="Search" class="header-search-input z-depth-2"
+                               placeholder="Search"/>
+                    </div>
+
+                    <ul class="right hide-on-med-and-down">
+                        <li>
+                            <div class="col s12 m3 l3 left">
+                                <p>
+                                    <button name="search_btn" class="btn-floating btn-large waves-effect waves-light brown" type="submit" style="position: absolute; margin-top: -10px; margin-left: -55px">
+                                        <i class="mdi-action-search"></i></button>
+                                </p>
+                            </div>
+                        </li>
+                        <li><a href="#" data-activates="chat-out"
+                               class="waves-effect waves-block waves-light chat-collapse"></a>
+                        </li>
+{#                        <li><a href="javascript:void(0);"#}
+{#                               class="waves-effect waves-block waves-light translation-button"#}
+{#                               data-activates="translation-dropdown">ENGLISH</a>#}
+{#                        </li>#}
+                        <li><button type="submit" name="eng" class="waves-effect waves-block waves-light translation-button" data-activates="translation-dropdown"><img src="{% static '' %}images/UK.png" alt="UK" /></button></li>
+                        <li><button type="submit" name="fin" class="waves-effect waves-block waves-light translation-button" data-activates="translation-dropdown"><img src="{% static '' %}images/Finland.png" alt="Finnish" /></button></li>
+                        <li><a href="javascript:void(0);"
+                               class="waves-effect waves-block waves-light toggle-fullscreen"><i
+                                class="mdi-action-settings-overscan"></i></a>
+                        </li>
+                    </ul>
+                </form>
             </div>
         </nav>
     </div>
 </header>
 
 <main>
-
     <ul>
         <li><a class="active" href="{% url 'account:index' %}">Home</a></li>
         <li><a href="{% url 'auction:auction_add' %}">Auction</a></li>
@@ -65,18 +86,18 @@
     {% block content %}
     {% endblock %}
 
-{#    <footer class="page-footer">#}
-{#        <div class="footer-copyright">#}
-{#            <div class="container">#}
-{#                Copyright © 2019 <a class="grey-text text-lighten-4"#}
-{#                                    href="http://themeforest.net/user/geekslabs/portfolio?ref=geekslabs"#}
-{#                                    target="_blank">GeeksLabs</a>#}
-{#                All rights reserved.#}
-{#                <span class="right"> Design and Developed by <a class="grey-text text-lighten-4"#}
-{#                                                                href="http://geekslabs.com/">YAAS-Team</a></span>#}
-{#            </div>#}
-{#        </div>#}
-{#    </footer>#}
+    {#    <footer class="page-footer">#}
+    {#        <div class="footer-copyright">#}
+    {#            <div class="container">#}
+    {#                Copyright © 2019 <a class="grey-text text-lighten-4"#}
+    {#                                    href="http://themeforest.net/user/geekslabs/portfolio?ref=geekslabs"#}
+    {#                                    target="_blank">GeeksLabs</a>#}
+    {#                All rights reserved.#}
+    {#                <span class="right"> Design and Developed by <a class="grey-text text-lighten-4"#}
+    {#                                                                href="http://geekslabs.com/">YAAS-Team</a></span>#}
+    {#            </div>#}
+    {#        </div>#}
+    {#    </footer>#}
 
     <style>
         ul {
@@ -84,7 +105,7 @@
             margin: 0;
             padding: 0;
             overflow: hidden;
-            background-color: #333;
+            background-color: #00bcd4;
         }
 
         li {
@@ -103,7 +124,6 @@
             background-color: #111;
         }
     </style>
-
 </main>
 
 </body>
