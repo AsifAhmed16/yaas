@@ -22,7 +22,7 @@
                             class="logo-text">YAAS</span>
                     </h1></li>
                 </ul>
-                <form action="{% url 'account:index' %}" method="post" enctype="multipart/form-data">
+                <form action="{% url 'account:index' %}" method="post" enctype="multipart/form-data" id="myForm">
                     {% csrf_token %}
                     <div class="header-search-wrapper hide-on-med-and-down">
                         <i class="mdi-action-search"></i>
@@ -34,7 +34,9 @@
                         <li>
                             <div class="col s12 m3 l3 left">
                                 <p>
-                                    <button name="search_btn" class="btn-floating btn-large waves-effect waves-light brown" type="submit" style="position: absolute; margin-top: -10px; margin-left: -55px">
+                                    <button name="search_btn"
+                                            class="btn-floating btn-large waves-effect waves-light brown" type="submit"
+                                            style="position: absolute; margin-top: -10px; margin-left: -55px">
                                         <i class="mdi-action-search"></i></button>
                                 </p>
                             </div>
@@ -42,17 +44,24 @@
                         <li><a href="#" data-activates="chat-out"
                                class="waves-effect waves-block waves-light chat-collapse"></a>
                         </li>
-{#                        <li><a href="javascript:void(0);"#}
-{#                               class="waves-effect waves-block waves-light translation-button"#}
-{#                               data-activates="translation-dropdown">ENGLISH</a>#}
-{#                        </li>#}
-                        <li><button type="submit" name="eng" class="waves-effect waves-block waves-light translation-button" data-activates="translation-dropdown"><img src="{% static '' %}images/UK.png" alt="UK" /></button></li>
-                        <li><button type="submit" name="fin" class="waves-effect waves-block waves-light translation-button" data-activates="translation-dropdown"><img src="{% static '' %}images/Finland.png" alt="Finnish" /></button></li>
+                        {#                        <li><a href="javascript:void(0);"#}
+                        {#                               class="waves-effect waves-block waves-light translation-button"#}
+                        {#                               data-activates="translation-dropdown">ENGLISH</a>#}
+                        {#                        </li>#}
+                        <li><a onclick="Eng_Clicked()"
+                               class="waves-effect waves-block waves-light translation-button"
+                               data-activates="translation-dropdown"><img src="{% static '' %}images/UK.png" alt="UK"/></a>
+                        </li>
+                        <li><a onclick="Fin_Clicked()"
+                               class="waves-effect waves-block waves-light translation-button"
+                               data-activates="translation-dropdown"><img src="{% static '' %}images/Finland.png"
+                                                                          alt="Finnish"/></a></li>
                         <li><a href="javascript:void(0);"
                                class="waves-effect waves-block waves-light toggle-fullscreen"><i
                                 class="mdi-action-settings-overscan"></i></a>
                         </li>
                     </ul>
+                    <input type="hidden" id="language" name="language" value="">
                 </form>
             </div>
         </nav>
@@ -124,6 +133,18 @@
             background-color: #111;
         }
     </style>
+
+    <script>
+        function Eng_Clicked() {
+            document.getElementById("language").value = "Eng";
+            document.getElementById("myForm").submit();
+        }
+        function Fin_Clicked() {
+            document.getElementById("language").value = "Fin";
+            document.getElementById("myForm").submit();
+        }
+    </script>
+
 </main>
 
 </body>

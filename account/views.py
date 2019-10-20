@@ -8,11 +8,12 @@ def index(request):
     display = Auction.objects.filter(status_id=Auction_Status.objects.get(status="Active").id)
     context = dict()
     context['display'] = display
-    if request.session['language']:
+    if 'language' in request.session:
         userdata = {
             'language': request.session['language'],
         }
     else:
+        request.session['language'] = "Eng"
         userdata = {
             'language': "Eng",
         }
@@ -20,16 +21,10 @@ def index(request):
     if request.method == 'POST':
         display = display.filter(title__icontains=request.POST['Search'])
         context['display'] = display
-        if request.POST.get("eng"):
-            request.session['language'] = "Eng"
+        if request.POST['language']:
+            request.session['language'] = request.POST['language']
             userdata = {
-                'language': "Eng",
-            }
-            context['data'] = userdata
-        elif request.POST.get("fin"):
-            request.session['language'] = "Fin"
-            userdata = {
-                'language': "Fin",
+                'language': request.POST['language'],
             }
             context['data'] = userdata
     if 'logged_in' in request.session:
