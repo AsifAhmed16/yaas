@@ -39,7 +39,7 @@
                             <div class="card z-depth-1 hoverable">
                                 <div class="card-image teal darken-2 waves-effect">
                                     <div class="card-title">{{ each.title }}</div>
-                                    <div class="price"><sup>Min Price - $</sup>{{ each.min_price }}<sub>/mo</sub></div>
+                                    <div class="price"><sup>Min Price - €</sup>{{ each.min_price }}<sub>/EUR</sub></div>
                                     <div class="price-desc">Posted On - {{ each.created_date }}</div>
                                     <div class="price-desc">Deadline - {{ each.deadline }}</div>
                                 </div>
@@ -54,7 +54,7 @@
                                     </ul>
                                 </div>
                                 <div class="card-action center-align">
-                                    <a href="" class="waves-effect waves-light btn green">Make a Bid</a>
+                                    <a href="{% url 'auction:auction_bid' each.id %}" class="waves-effect waves-light btn green">Make a Bid</a>
                                     <a class="waves-effect waves-light btn red">Ban Auction</a>
                                 </div>
                             </div>

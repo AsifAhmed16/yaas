@@ -1,4 +1,5 @@
 {% extends 'includes/base.html' %}
+{% load static %}
 
 {% block content %}
     <div class="container">
@@ -48,10 +49,11 @@
                         <p>Items ... </p>
                     </div>
                     <div class="col s12 m8 l9">
-                        <table class="bordered">
+                        <table class="bordered" id="browse">
                             <thead>
                             <tr>
                                 <th data-field="id">Title</th>
+                                <th data-field="name">Description</th>
                                 <th data-field="name">Minimum Price</th>
                                 <th data-field="price">Deadline</th>
                                 <th data-field="action">Action</th>
@@ -61,12 +63,13 @@
                             {% for data in list %}
                                 <tr>
                                     <td>{{ data.title }}</td>
+                                    <td>{{ data.description }}</td>
                                     <td>{{ data.min_price }}</td>
                                     <td>{{ data.deadline }}</td>
                                     <td class="text-right">
                                         <ul class="dropdown-menu pull-right">
-                                            <li><a href="{% url 'auction:auction_edit' data.id %}"
-                                                   title="Edit"><i class="mdi-editor-border-color"></i> Edit</a>
+                                            <li><a href="{% url 'auction:auction_bid' data.id %}"
+                                                   title="Edit"><i class="mdi-action-add-shopping-cart"></i> Bid</a>
                                             </li>
                                         </ul>
                                     </td>
@@ -93,27 +96,39 @@
         </div>
     </div>
 
+    <script src="{% static '' %}js/others/jquery-3.2.1.min.js"></script>
+
     <script>
         $(document).ready(function () {
             var activities = document.getElementById("search");
             activities.addEventListener("input", function () {
                 var search = document.getElementById('search').value;
-                alert(search);
                 $.ajax({
                     url: '/auction/search_auction/' + search + '/',
                     type: 'post',
                     data: {depart: search},
                     dataType: 'json',
                     success: function (response) {
-                        alert(response);
-                        $("#test tbody tr").remove();
-                        for (i = 0; i < 3; i++) {
-                            $('#test tbody').append('<tr>' +
-                                '<td>a</td>' +
-                                '<td>b</td>' +
-                                '<td>c</td>' +
-                                '<td>d</td>' +
-                                '<td>e</td>' +
+                        $("#browse tbody tr").remove();
+                        for (i = 0; i < response.length; i++) {
+                            var id_now = response[i]['id'];
+                            var title = response[i]['title'];
+                            var description = response[i]['description'];
+                            var min_price = response[i]['min_price'];
+                            var deadline = response[i]['deadline'];
+                            $('#browse tbody').append('<tr>' +
+                                '<td>'+ title +'</td>' +
+                                '<td>' + description + '</td>' +
+                                '<td>' + min_price + '</td>' +
+                                '<td>' + deadline + '</td>' +
+                                '<td class="text-right">\n' +
+                                '   <ul class="dropdown-menu pull-right">\n' +
+                                '       <li>' +
+                                '            <a href="http://127.0.0.1:8009/auction/bid/'+ id_now +'/" id="obj" title="Bid">\n' +
+                                '            <i class="mdi-action-add-shopping-cart"></i> Bid</a>\n' +
+                                '       </li>\n' +
+                                '   </ul>\n' +
+                                '</td>' +
                                 '</tr>'
                             );
                         }

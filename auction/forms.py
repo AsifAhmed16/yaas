@@ -35,3 +35,13 @@ class AuctionTempForm(forms.ModelForm):
             "description": forms.Textarea(attrs={'class': 'form-control'}),
             "min_price": forms.NumberInput(attrs={'class': 'form-control'}),
         }
+
+
+class BidForm(forms.ModelForm):
+    class Meta:
+        model = Bid
+        fields = '__all__'
+        exclude = ('auction', 'bidder', 'created_date')
+        widgets = {
+            "bid_price": forms.NumberInput(attrs={'class': 'form-control'}),
+        }

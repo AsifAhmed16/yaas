@@ -8,14 +8,30 @@
             <div class="divider"></div>
             {% if messages %}
                 {% for message in messages %}
-                    <strong style="color: red">{{ message.message }}</strong>
+                    {% if message.level_tag == 'error' %}
+                        <div class="alert alert-danger" role="alert">
+                            <strong>
+                                {{ message.message }}
+                            </strong>
+                        </div>
+                    {% elif message.level_tag == 'success' %}
+                        <div class=" alert alert-success" role="alert">
+                            <strong>
+                                {{ message.message }}
+                            </strong>
+                        </div>
+                    {% endif %}
                 {% endfor %}
             {% endif %}
             <div id="basic-form" class="section">
                 <div class="row">
                     <div class="col s8 m8 16" style="float: right">
                         <div class="card-panel">
-                            <h4 class="header2">Auction Edit</h4>
+                            <h4 class="header">Auction Bid</h4>
+                            <h4 class="header2">{{ auc_obj.title }}</h4>
+                            <h4 class="header2">{{ auc_obj.description }}</h4>
+                            <h4 class="header2">{{ auc_obj.min_price }}</h4>
+                            <h4 class="header2">{{ auc_obj.deadline }}</h4>
                             <div class="row">
                                 <form action="" class="col s12" method="post" enctype="multipart/form-data">
                                     {% csrf_token %}

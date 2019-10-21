@@ -72,6 +72,7 @@
     <ul>
         <li><a class="active" href="{% url 'account:index' %}">Home</a></li>
         <li><a href="{% url 'auction:auction_add' %}">Auction</a></li>
+        <li><a href="{% url 'auction:auction_browse' %}">Quick Browse</a></li>
         {% if data.logged_in %}
             <li style="float: right; color: white">
                 <a href="{% url 'account:change_email' %}"> Change Email </a>

@@ -158,7 +158,10 @@ def auction_bid(request, id):
     if 'logged_in' in request.session:
         if request.session['logged_in'] is True:
             auc_obj = Auction.objects.get(id=id)
-            form = AuctionForm(request.POST or None, instance=auc_obj)
+            # if auc_obj.seller.id == request.session['id']:
+            #     messages.error(request, 'You are not allowed to bid on your own created auction.')
+            #     return redirect('account:index')
+            form = BidForm()
             userdata = {
                 'id': request.session['id'],
                 'username': request.session['username'],
@@ -167,7 +170,8 @@ def auction_bid(request, id):
             }
             context = {
                 'data': userdata,
-                'form': form
+                'form': form,
+                'auc_obj': auc_obj
             }
             if request.method == 'POST':
                 if form.is_valid():
@@ -175,10 +179,12 @@ def auction_bid(request, id):
                     form.save()
                     messages.success(request, 'Description Updated Successfully')
                     return redirect('auction:auction_browse')
-            return render(request, 'auction/auction_edit.html', context)
+            return render(request, 'auction/auction_bid.html', context)
         else:
+            messages.error(request, 'Please login before bidding an auction.')
             return redirect('account:login')
     else:
+        messages.error(request, 'Please login before bidding an auction.')
         return redirect('account:login')
 
 
@@ -226,7 +232,7 @@ def mail_notification(request, id, temp_auc):
     employeeobject = User.objects.get(id=id)
     mailbody = "Dear " + employeeobject.username + "," + '\n' + '\n' \
                + "Please go to the link below and confirm auction you made. " + '\n' + '\n' + \
-               "Link: " + "http://127.0.0.1:8009/auctionauction/create/" + str(temp_auc) + "" + '\n' + '\n'
+               "Link: " + "http://127.0.0.1:8009/auction/create/" + str(temp_auc) + "" + '\n' + '\n'
     email = employeeobject.email
     mailbody = mailbody + '\n' + "Thanks." + '\n' + "YAAS Team."
     if is_connected():
@@ -253,7 +259,6 @@ def is_connected():
 
 @csrf_exempt
 def search_auction(request, search):
-    print("ji")
     obj = Auction.objects.filter(title__icontains=search)
     response = [a.as_json() for a in obj]
     return JsonResponse(response, safe=False)
