@@ -40,7 +40,6 @@ INSTALLED_APPS = [
     'background_task',
     'account',
     'auction',
-    'bid',
 ]
 
 MIDDLEWARE = [

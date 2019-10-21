@@ -6,7 +6,8 @@
         <div class="section">
             <p class="caption">Add an Auction.
             <span style="float: right">
-                <a href="{% url 'auction:auction_list' %}">List of Auctions</a>
+                <a class="btn waves-effect waves-light purple" href="{% url 'auction:auction_browse' %}">Browse Auctions<i class="mdi-action-open-in-browser left"></i></a>
+                <a class="btn waves-effect waves-light grey" href="{% url 'auction:auction_list' %}">Created Auctions<i class="mdi-image-add-to-photos right"></i></a>
             </span>
             </p>
             <div class="divider"></div>

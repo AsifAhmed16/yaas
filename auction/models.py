@@ -21,6 +21,15 @@ class Auction(models.Model):
     def __str__(self):
         return self.title
 
+    def as_json(self):
+        return dict(
+            id=str(self.id),
+            title=str(self.title),
+            description=str(self.description),
+            min_price=str(self.min_price),
+            deadline=str(self.deadline),
+        )
+
     class Meta:
         db_table = 'Auction'
 
@@ -36,3 +45,16 @@ class Auction_Temp(models.Model):
 
     class Meta:
         db_table = 'Auction_Temp'
+
+
+class Bid(models.Model):
+    auction = models.ForeignKey(Auction, on_delete=models.CASCADE)
+    bidder = models.ForeignKey(User, on_delete=models.CASCADE)
+    bid_price = models.DecimalField(max_digits=11, decimal_places=2)
+    created_date = models.DateTimeField()
+
+    def __str__(self):
+        return self.bid_price
+
+    class Meta:
+        db_table = 'Bid'

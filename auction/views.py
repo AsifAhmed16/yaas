@@ -8,13 +8,15 @@ import socket
 from .models import *
 import urllib.request
 import json
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 
 class CurrencyConverter:
     rates = {}
 
     def __init__(self, url):
-        req = urllib.request.Request(url, headers={'User-Agent': 'howCode Currency Bot'})
+        req = urllib.request.Request(url, headers={'User-Agent': 'YAAS Currency Bot'})
         data = urllib.request.urlopen(req).read()
         data = json.loads(data.decode('utf-8'))
         self.rates = data["rates"]
@@ -75,6 +77,27 @@ def auction_add(request):
         return redirect('account:login')
 
 
+def auction_browse(request):
+    if 'logged_in' in request.session:
+        if request.session['logged_in'] is True:
+            userdata = {
+                'id': request.session['id'],
+                'username': request.session['username'],
+                'logged_in': request.session['logged_in'],
+                'language': request.session['language'],
+            }
+            list = Auction.objects.filter(status_id=Auction_Status.objects.get(status="Active").id)
+            context = {
+                'data': userdata,
+                'list': list
+            }
+            return render(request, 'auction/auction_browse.html', context)
+        else:
+            return redirect('account:login')
+    else:
+        return redirect('account:login')
+
+
 def auction_list(request):
     if 'logged_in' in request.session:
         if request.session['logged_in'] is True:
@@ -131,6 +154,34 @@ def auction_edit(request, id):
         return redirect('account:login')
 
 
+def auction_bid(request, id):
+    if 'logged_in' in request.session:
+        if request.session['logged_in'] is True:
+            auc_obj = Auction.objects.get(id=id)
+            form = AuctionForm(request.POST or None, instance=auc_obj)
+            userdata = {
+                'id': request.session['id'],
+                'username': request.session['username'],
+                'logged_in': request.session['logged_in'],
+                'language': request.session['language'],
+            }
+            context = {
+                'data': userdata,
+                'form': form
+            }
+            if request.method == 'POST':
+                if form.is_valid():
+                    form = form.save(commit=False)
+                    form.save()
+                    messages.success(request, 'Description Updated Successfully')
+                    return redirect('auction:auction_browse')
+            return render(request, 'auction/auction_edit.html', context)
+        else:
+            return redirect('account:login')
+    else:
+        return redirect('account:login')
+
+
 def auction_confirm(request, id):
     try:
         temp = Auction_Temp.objects.get(pk=id)
@@ -141,6 +192,7 @@ def auction_confirm(request, id):
     request.session['logged_in'] = True
     request.session['username'] = user.username
     request.session['id'] = user.pk
+    request.session['language'] = user.language
     form = AuctionTempForm(instance=temp)
     userdata = {
         'id': request.session['id'],
@@ -197,3 +249,11 @@ def is_connected():
     except OSError:
         pass
     return False
+
+
+@csrf_exempt
+def search_auction(request, search):
+    print("ji")
+    obj = Auction.objects.filter(title__icontains=search)
+    response = [a.as_json() for a in obj]
+    return JsonResponse(response, safe=False)

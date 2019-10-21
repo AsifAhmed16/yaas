@@ -1,0 +1,46 @@
+{% extends 'includes/base.html' %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="section">
+            <p class="caption">Selected Auction.</p>
+            <div class="divider"></div>
+            {% if messages %}
+                {% for message in messages %}
+                    <strong style="color: red">{{ message.message }}</strong>
+                {% endfor %}
+            {% endif %}
+            <div id="basic-form" class="section">
+                <div class="row">
+                    <div class="col s8 m8 16" style="float: right">
+                        <div class="card-panel">
+                            <h4 class="header2">Auction Edit</h4>
+                            <div class="row">
+                                <form action="" class="col s12" method="post" enctype="multipart/form-data">
+                                    {% csrf_token %}
+                                    {% for field in form %}
+                                        <div class="input-field col s12">
+                                            <label for="{{ field.id_for_label }}">{{ field.label }} <span
+                                                    class="text-danger">*</span></label>
+                                            {{ field }}
+                                        </div>
+                                    {% endfor %}
+                                    <div class="row">
+                                        <div class="input-field col s12">
+                                            <button class="btn cyan waves-effect waves-light right" type="submit"
+                                                    name="action">Submit
+                                                <i class="mdi-content-send right"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
