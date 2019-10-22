@@ -1,4 +1,5 @@
 {% extends 'includes/base.html' %}
+{% load static %}
 
 {% block content %}
 
@@ -29,8 +30,9 @@
                     <div class="col s12 m4 l3">
                         <p>Title - {{ auc_obj.title }}<br>
                             Description - {{ auc_obj.description }}<br>
-                            Min Price - {{ auc_obj.min_price }} €<br>
+                            Starting Price - {{ auc_obj.min_price }} €<br>
                             Deadline - {{ auc_obj.deadline }}<br>
+                            Minimum Bid - {{ min_bid }} €<br>
                         </p>
                     </div>
                     <div class="col s12 m8 l9">
@@ -42,11 +44,11 @@
                                     <label>Currency List</label>
                                     <br>
                                     <p>
-                                        <input name="group1" type="radio" id="eur" onclick="setCurrency(this.id)"/>
+                                        <input checked name="group1" type="radio" id="eur" onclick="setCurrency(this.id)"/>
                                         <label for="eur">EUR/€</label>
                                     </p>
                                     <p>
-                                        <input name="group1" type="radio" id="usd" onclick="setCurrency(this.id)"/>
+                                        <input class="with-gap" name="group1" type="radio" id="usd" onclick="setCurrency(this.id)"/>
                                         <label for="usd">USD/$</label>
                                     </p>
                                     <p>
@@ -54,20 +56,21 @@
                                         <label for="cad">CAD</label>
                                     </p>
                                     <p>
-                                        <input name="group1" type="radio" id="bdt" onclick="setCurrency(this.id)"/>
+                                        <input class="with-gap" name="group1" type="radio" id="bdt" onclick="setCurrency(this.id)"/>
                                         <label for="bdt">BDT</label>
                                     </p>
                                 </div>
                                 <div class="input-field col s6">
                                     <i class="mdi-editor-attach-money prefix"></i>
-                                    <input id="bid_amount" name="bid_amount" type="number" class="validate" required>
+                                    <input id="bid_amount" name="bid_amount" type="number" step="0.01" class="validate" required>
                                     <label for="bid_amount">Amount</label>
                                 </div>
                                 <div id="convert_div" class="input-field col s2">
-                                    <input id="amount" name="amount" type="number" readonly />
-                                    <label for="amount">Converted To EUR(€)</label>
+                                    <input id="amount" name="amount" type="number" readonly value="0" />
+                                    <label for="amount">In EUR(€) ... </label>
                                 </div>
-                                <input type="hidden" id="currency" name="currency" value="EUR">
+                                <input type="hidden" id="currency" name="currency" value="eur">
+                                <input type="hidden" id="min_price" name="min_price" value="{{ min_bid }}">
                                 <div class="row">
                                     <div class="input-field col s12">
                                         <button class="btn cyan waves-effect waves-light right" type="submit"
@@ -84,33 +87,51 @@
         </div>
     </div>
 
+    <script src="{% static '' %}js/others/jquery-3.2.1.min.js"></script>
+
     <script>
         $(document).ready(function () {
             $( '#convert_div' ).hide();
-            var radiobtn = document.getElementById("eur");
-            radiobtn.checked = true;
 
             var activities = document.getElementById("bid_amount");
             activities.addEventListener("input", function () {
-                var search = document.getElementById('bid_amount').value;
+                var bid_amount = document.getElementById('bid_amount').value;
+                var currency = document.getElementById('currency').value;
+                if (currency == "eur"){
+                    document.getElementById("amount").value = bid_amount;
+                }
                 $.ajax({
-                    url: '/auction/convert/' + search + '/',
+                    url: '/auction/convert/' + bid_amount + '/'  + currency + '/',
                     type: 'post',
-                    data: {depart: search},
+                    data: {depart: bid_amount, currency},
                     dataType: 'json',
                     success: function (response) {
-                        alert("k");
+                        document.getElementById("amount").value = response;
                     }
                 });
             });
 
             $("#bid_form").submit(function (event) {
                 event.preventDefault();
+                var min_price = document.getElementById("min_price").value;
+                var amount = document.getElementById("amount").value;
+                if (parseFloat(amount) > parseFloat(min_price) ){
+                    $("#bid_form").unbind('submit').submit();
+                } else {
+                    swal("Bid a bigger amount...");
+                }
             });
         });
 
-        function setCurrency() {
-            document.getElementById("currency").value = "USD"
+        function setCurrency(c_id) {
+            document.getElementById("bid_amount").value = 0.00;
+            document.getElementById("amount").value = 0.00;
+            document.getElementById("currency").value = c_id;
+            if (c_id != "eur"){
+                $( '#convert_div' ).show();
+            } else {
+                $( '#convert_div' ).hide();
+            }
         }
     </script>
 

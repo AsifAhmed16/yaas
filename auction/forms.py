@@ -33,7 +33,7 @@ class AuctionTempForm(forms.ModelForm):
         widgets = {
             "title": forms.TextInput(attrs={'class': 'form-control'}),
             "description": forms.Textarea(attrs={'class': 'form-control'}),
-            "min_price": forms.NumberInput(attrs={'class': 'form-control'}),
+            "min_price": forms.NumberInput(attrs={'class': 'form-control', 'step': '0.01'}),
         }
 
 

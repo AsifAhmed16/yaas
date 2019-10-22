@@ -10,5 +10,7 @@ urlpatterns = [
     path('list/', auction_list, name='auction_list'),
     path('edit/<int:id>/', auction_edit, name='auction_edit'),
     path('bid/<int:id>/', auction_bid, name='auction_bid'),
+    path('ban/<int:id>/', auction_ban, name='auction_ban'),
     path('search_auction/<search>/', search_auction, name='search_auction'),
+    path('convert/<bid_amount>/<currency>/', auction_convert, name='auction_convert'),
 ]

@@ -17,6 +17,7 @@ class Auction(models.Model):
     status = models.ForeignKey(Auction_Status, on_delete=models.CASCADE)
     deadline = models.DateTimeField()
     created_date = models.DateTimeField()
+    version = models.IntegerField(default=0)
 
     def __str__(self):
         return self.title
@@ -52,6 +53,7 @@ class Bid(models.Model):
     bidder = models.ForeignKey(User, on_delete=models.CASCADE)
     bid_price = models.DecimalField(max_digits=11, decimal_places=2)
     created_date = models.DateTimeField()
+    version = models.IntegerField(default=0)
 
     def __str__(self):
         return self.bid_price

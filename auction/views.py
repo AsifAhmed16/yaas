@@ -113,12 +113,6 @@ def auction_list(request):
                 'data': userdata,
                 'list': list
             }
-            converter = CurrencyConverter("http://data.fixer.io/api/latest?access_key=613212d138e913ef0d74e299cb89c9cc")
-
-            print(converter.convert(1.0, "EUR", "USD"))
-            print(converter.convert(1.0, "GBP", "USD"))
-            print(converter.convert(1.0, "CAD", "GBP"))
-            print(converter.convert(1.0, "CAD", "EUR"))
             return render(request, 'auction/auction_list.html', context)
         else:
             return redirect('account:login')
@@ -130,7 +124,6 @@ def auction_edit(request, id):
     if 'logged_in' in request.session:
         if request.session['logged_in'] is True:
             auc_obj = Auction.objects.get(id=id)
-            form = AuctionForm(request.POST or None, instance=auc_obj)
             userdata = {
                 'id': request.session['id'],
                 'username': request.session['username'],
@@ -139,14 +132,15 @@ def auction_edit(request, id):
             }
             context = {
                 'data': userdata,
-                'form': form
+                'description': auc_obj.description
             }
             if request.method == 'POST':
-                if form.is_valid():
-                    form = form.save(commit=False)
-                    form.save()
-                    messages.success(request, 'Description Updated Successfully')
-                    return redirect('auction:auction_list')
+                updated = Auction.objects.filter(id=auc_obj.id, version=auc_obj.version).update(
+                    description=request.POST['description'],
+                    version=auc_obj.version + 1
+                )
+                messages.success(request, 'Description Updated Successfully')
+                return redirect('auction:auction_list')
             return render(request, 'auction/auction_edit.html', context)
         else:
             return redirect('account:login')
@@ -154,13 +148,51 @@ def auction_edit(request, id):
         return redirect('account:login')
 
 
+def auction_ban(request, id):
+    if 'logged_in' in request.session:
+        if request.session['logged_in'] is True:
+            if (User.objects.get(id=request.session['id']).role.role) == "Admin":
+                auc_obj = Auction.objects.get(id=id)
+                userdata = {
+                    'id': request.session['id'],
+                    'username': request.session['username'],
+                    'logged_in': request.session['logged_in'],
+                    'language': request.session['language'],
+                }
+                context = {
+                    'data': userdata,
+                    'auc_obj': auc_obj,
+                }
+                if request.method == 'POST':
+                    updated = Auction.objects.filter(id=auc_obj.id, version=auc_obj.version).update(
+                        status_id=Auction_Status.objects.get(status="Banned").id,
+                        version=auc_obj.version + 1
+                    )
+                    messages.success(request, 'Auction Banned Successfully')
+                    return redirect('account:index')
+                return render(request, 'auction/auction_ban.html', context)
+            else:
+                messages.success(request, 'You need to login as Admin to ban an auction.')
+                return redirect('account:index')
+        else:
+            messages.success(request, 'Login as Admin')
+            return redirect('account:login')
+    else:
+        messages.error(request, 'Login as Admin')
+        return redirect('account:login')
+
+
 def auction_bid(request, id):
     if 'logged_in' in request.session:
         if request.session['logged_in'] is True:
             auc_obj = Auction.objects.get(id=id)
-            # if auc_obj.seller.id == request.session['id']:
-            #     messages.error(request, 'You are not allowed to bid on your own created auction.')
-            #     return redirect('account:index')
+            if auc_obj.seller.id == request.session['id']:
+                messages.error(request, 'You are not allowed to bid on your own created auction.')
+                return redirect('account:index')
+            min_bid = auc_obj.min_price
+            pre_bid = Bid.objects.filter(auction=auc_obj)
+            if pre_bid:
+                min_bid = pre_bid.order_by('-bid_price').first().bid_price
             userdata = {
                 'id': request.session['id'],
                 'username': request.session['username'],
@@ -169,12 +201,17 @@ def auction_bid(request, id):
             }
             context = {
                 'data': userdata,
-                'auc_obj': auc_obj
+                'auc_obj': auc_obj,
+                'min_bid': min_bid
             }
             if request.method == 'POST':
-                bid_amount = request.POST['bid_amount']
-                currency = request.POST['currency']
-                messages.success(request, 'Bid Successful.')
+                Bid.objects.create(auction=auc_obj,
+                                   bidder=User.objects.get(id=request.session['id']),
+                                   bid_price=request.POST['amount'],
+                                   created_date=datetime.now())
+                bid_id = Bid.objects.latest('id').id
+                bid_mail_notification(request, bid_id)
+                messages.success(request, 'Bid Placed Successfully.')
                 return redirect('account:index')
             return render(request, 'auction/auction_bid.html', context)
         else:
@@ -225,6 +262,28 @@ def auction_confirm(request, id):
     return render(request, 'auction/auction_add.html', context)
 
 
+def bid_mail_notification(request, bid_id):
+    bid_obj = Bid.objects.get(id=bid_id)
+    b_mailbody = "Dear " + bid_obj.bidder.username + "," + '\n' + '\n' \
+                 + "Thanks for bidding. Below here is the auction you bid for." + '\n' + '\n' \
+                 + "Auction Details :::: Title - " + bid_obj.auction.title + " Price - " + str(bid_obj.auction.min_price) + '\n' + '\n' + \
+                 "Bid Price: " + str(bid_obj.bid_price) + '\n' + '\n'
+    b_email = bid_obj.bidder.email
+    s_email = bid_obj.auction.seller.email
+    b_mailbody = b_mailbody + '\n' + "Thanks." + '\n' + "YAAS Team."
+    s_mailbody = "Dear " + bid_obj.auction.seller.username + "," + '\n' + '\n' \
+                 + "A bid just took place. Below here is the details of the auction you created." + '\n' + '\n' \
+                 + "Auction Details :::: Title - " + bid_obj.auction.title + " Price - " + str(bid_obj.auction.min_price) + '\n' + '\n' + \
+                 "Latest Bid Price: " + str(bid_obj.bid_price) + '\n' + '\n'
+    s_mailbody = s_mailbody + '\n' + "Thanks." + '\n' + "YAAS Team."
+    if is_connected():
+        send_mail("New Auction", b_mailbody, "YAAS Admin", [b_email])
+        send_mail("New Auction", s_mailbody, "YAAS Admin", [s_email])
+    else:
+        messages.error(request, 'Network Error. Check your internet connection.')
+    return
+
+
 def mail_notification(request, id, temp_auc):
     employeeobject = User.objects.get(id=id)
     mailbody = "Dear " + employeeobject.username + "," + '\n' + '\n' \
@@ -258,4 +317,13 @@ def is_connected():
 def search_auction(request, search):
     obj = Auction.objects.filter(title__icontains=search)
     response = [a.as_json() for a in obj]
+    return JsonResponse(response, safe=False)
+
+
+@csrf_exempt
+def auction_convert(request, bid_amount, currency):
+    converter = CurrencyConverter("http://data.fixer.io/api/latest?access_key=613212d138e913ef0d74e299cb89c9cc")
+    res = converter.convert(float(bid_amount), currency.upper(), "EUR")
+    response = res[3]
+    response = "%.2f" % response
     return JsonResponse(response, safe=False)

@@ -19,13 +19,10 @@
                             <div class="row">
                                 <form action="" class="col s12" method="post" enctype="multipart/form-data">
                                     {% csrf_token %}
-                                    {% for field in form %}
-                                        <div class="input-field col s12">
-                                            <label for="{{ field.id_for_label }}">{{ field.label }} <span
-                                                    class="text-danger">*</span></label>
-                                            {{ field }}
-                                        </div>
-                                    {% endfor %}
+                                    <div class="input-field col s12">
+                                        <input id="description" name="description" type="text" value="{{ description }}"/>
+                                        <label for="description">Description</label>
+                                    </div>
                                     <div class="row">
                                         <div class="input-field col s12">
                                             <button class="btn cyan waves-effect waves-light right" type="submit"

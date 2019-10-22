@@ -55,7 +55,7 @@
                                 </div>
                                 <div class="card-action center-align">
                                     <a href="{% url 'auction:auction_bid' each.id %}" class="waves-effect waves-light btn green">Make a Bid</a>
-                                    <a class="waves-effect waves-light btn red">Ban Auction</a>
+                                    <a href="{% url 'auction:auction_ban' each.id %}" class="waves-effect waves-light btn red">Ban Auction</a>
                                 </div>
                             </div>
                         </article>

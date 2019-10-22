@@ -1,0 +1,87 @@
+{% extends 'includes/base.html' %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="section">
+            <p class="caption">Selected Auction.</p>
+            <div class="divider"></div>
+            {% if messages %}
+                {% for message in messages %}
+                    {% if message.level_tag == 'error' %}
+                        <div class="alert alert-danger" role="alert">
+                            <strong>
+                                {{ message.message }}
+                            </strong>
+                        </div>
+                    {% elif message.level_tag == 'success' %}
+                        <div class=" alert alert-success" role="alert">
+                            <strong>
+                                {{ message.message }}
+                            </strong>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            {% endif %}
+            <div id="icon-prefixes" class="section">
+                <h4 class="header">Auction Details</h4>
+                <div class="row">
+                    <div class="col s12 m4 l3">
+                        <p>Title - {{ auc_obj.title }}<br>
+                            Description - {{ auc_obj.description }}<br>
+                            Starting Price - {{ auc_obj.min_price }} €<br>
+                            Deadline - {{ auc_obj.deadline }}<br>
+                        </p>
+                    </div>
+                    <div class="col s12 m8 l9">
+                        <div class="row">
+                            <form action="" class="col s12" method="post" enctype="multipart/form-data" id="bid_form">
+                                {% csrf_token %}
+                                <div class="row">
+                                    <div class="input-field col s12">
+                                        <button class="btn cyan waves-effect waves-light right" type="submit"
+                                                name="action">Submit
+                                            <i class="mdi-content-send right"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="{% static '' %}js/others/jquery-3.2.1.min.js"></script>
+
+    <script>
+        $(document).ready(function () {
+            $("#ban_form").submit(function (event) {
+                event.preventDefault();
+                confirmMessage();
+            });
+        });
+        function confirmMessage() {
+            swal({
+                    title: "Auction Ban",
+                    text: "Are you sure want to ban that auction?",
+                    type: "warning",
+                    showCancelButton: true,
+                    confirmButtonColor: "#DD6B55",
+                    confirmButtonText: "Yes",
+                    cancelButtonText: "No",
+                    closeOnConfirm: false,
+                    closeOnCancel: false
+                },
+                function(isConfirm){
+                if (!(isConfirm)) {
+                    swal("Operation cancelled.", "success");
+                } else {
+                    $("#ban_form").unbind('submit').submit();
+                }
+            });
+        }
+    </script>
+
+{% endblock %}
