@@ -23,40 +23,95 @@
                     {% endif %}
                 {% endfor %}
             {% endif %}
-            <div id="basic-form" class="section">
+            <div id="icon-prefixes" class="section">
+                <h4 class="header">Auction Details</h4>
                 <div class="row">
-                    <div class="col s8 m8 16" style="float: right">
-                        <div class="card-panel">
-                            <h4 class="header">Auction Bid</h4>
-                            <h4 class="header2">{{ auc_obj.title }}</h4>
-                            <h4 class="header2">{{ auc_obj.description }}</h4>
-                            <h4 class="header2">{{ auc_obj.min_price }}</h4>
-                            <h4 class="header2">{{ auc_obj.deadline }}</h4>
-                            <div class="row">
-                                <form action="" class="col s12" method="post" enctype="multipart/form-data">
-                                    {% csrf_token %}
-                                    {% for field in form %}
-                                        <div class="input-field col s12">
-                                            <label for="{{ field.id_for_label }}">{{ field.label }} <span
-                                                    class="text-danger">*</span></label>
-                                            {{ field }}
-                                        </div>
-                                    {% endfor %}
-                                    <div class="row">
-                                        <div class="input-field col s12">
-                                            <button class="btn cyan waves-effect waves-light right" type="submit"
-                                                    name="action">Submit
-                                                <i class="mdi-content-send right"></i>
-                                            </button>
-                                        </div>
+                    <div class="col s12 m4 l3">
+                        <p>Title - {{ auc_obj.title }}<br>
+                            Description - {{ auc_obj.description }}<br>
+                            Min Price - {{ auc_obj.min_price }} €<br>
+                            Deadline - {{ auc_obj.deadline }}<br>
+                        </p>
+                    </div>
+                    <div class="col s12 m8 l9">
+                        <div class="row">
+                            <form action="" class="col s12" method="post" enctype="multipart/form-data" id="bid_form">
+                                {% csrf_token %}
+                                <div class="input-field col s4">
+                                    <i class="mdi-maps-local-atm prefix"></i>
+                                    <label>Currency List</label>
+                                    <br>
+                                    <p>
+                                        <input name="group1" type="radio" id="eur" onclick="setCurrency(this.id)"/>
+                                        <label for="eur">EUR/€</label>
+                                    </p>
+                                    <p>
+                                        <input name="group1" type="radio" id="usd" onclick="setCurrency(this.id)"/>
+                                        <label for="usd">USD/$</label>
+                                    </p>
+                                    <p>
+                                        <input class="with-gap" name="group1" type="radio" id="cad" onclick="setCurrency(this.id)"/>
+                                        <label for="cad">CAD</label>
+                                    </p>
+                                    <p>
+                                        <input name="group1" type="radio" id="bdt" onclick="setCurrency(this.id)"/>
+                                        <label for="bdt">BDT</label>
+                                    </p>
+                                </div>
+                                <div class="input-field col s6">
+                                    <i class="mdi-editor-attach-money prefix"></i>
+                                    <input id="bid_amount" name="bid_amount" type="number" class="validate" required>
+                                    <label for="bid_amount">Amount</label>
+                                </div>
+                                <div id="convert_div" class="input-field col s2">
+                                    <input id="amount" name="amount" type="number" readonly />
+                                    <label for="amount">Converted To EUR(€)</label>
+                                </div>
+                                <input type="hidden" id="currency" name="currency" value="EUR">
+                                <div class="row">
+                                    <div class="input-field col s12">
+                                        <button class="btn cyan waves-effect waves-light right" type="submit"
+                                                name="action">Submit
+                                            <i class="mdi-content-send right"></i>
+                                        </button>
                                     </div>
-                                </form>
-                            </div>
+                                </div>
+                            </form>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+
+    <script>
+        $(document).ready(function () {
+            $( '#convert_div' ).hide();
+            var radiobtn = document.getElementById("eur");
+            radiobtn.checked = true;
+
+            var activities = document.getElementById("bid_amount");
+            activities.addEventListener("input", function () {
+                var search = document.getElementById('bid_amount').value;
+                $.ajax({
+                    url: '/auction/convert/' + search + '/',
+                    type: 'post',
+                    data: {depart: search},
+                    dataType: 'json',
+                    success: function (response) {
+                        alert("k");
+                    }
+                });
+            });
+
+            $("#bid_form").submit(function (event) {
+                event.preventDefault();
+            });
+        });
+
+        function setCurrency() {
+            document.getElementById("currency").value = "USD"
+        }
+    </script>
 
 {% endblock %}

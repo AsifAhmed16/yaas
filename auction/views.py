@@ -161,7 +161,6 @@ def auction_bid(request, id):
             # if auc_obj.seller.id == request.session['id']:
             #     messages.error(request, 'You are not allowed to bid on your own created auction.')
             #     return redirect('account:index')
-            form = BidForm()
             userdata = {
                 'id': request.session['id'],
                 'username': request.session['username'],
@@ -170,15 +169,13 @@ def auction_bid(request, id):
             }
             context = {
                 'data': userdata,
-                'form': form,
                 'auc_obj': auc_obj
             }
             if request.method == 'POST':
-                if form.is_valid():
-                    form = form.save(commit=False)
-                    form.save()
-                    messages.success(request, 'Description Updated Successfully')
-                    return redirect('auction:auction_browse')
+                bid_amount = request.POST['bid_amount']
+                currency = request.POST['currency']
+                messages.success(request, 'Bid Successful.')
+                return redirect('account:index')
             return render(request, 'auction/auction_bid.html', context)
         else:
             messages.error(request, 'Please login before bidding an auction.')
