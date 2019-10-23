@@ -8,6 +8,7 @@ urlpatterns = [
     path('create/<int:id>/', auction_confirm, name='auction_confirm'),
     path('browse/', auction_browse, name='auction_browse'),
     path('list/', auction_list, name='auction_list'),
+    path('banned/list/', banned_auctions_list, name='banned_auctions_list'),
     path('edit/<int:id>/', auction_edit, name='auction_edit'),
     path('bid/<int:id>/', auction_bid, name='auction_bid'),
     path('ban/<int:id>/', auction_ban, name='auction_ban'),

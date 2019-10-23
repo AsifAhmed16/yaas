@@ -120,6 +120,31 @@ def auction_list(request):
         return redirect('account:login')
 
 
+def banned_auctions_list(request):
+    if 'logged_in' in request.session:
+        if request.session['logged_in'] is True:
+            if (User.objects.get(id=request.session['id']).role.role) == "Admin":
+                userdata = {
+                    'id': request.session['id'],
+                    'username': request.session['username'],
+                    'logged_in': request.session['logged_in'],
+                    'language': request.session['language'],
+                }
+                list = Auction.objects.filter(status_id=Auction_Status.objects.get(status="Banned").id)
+                context = {
+                    'data': userdata,
+                    'list': list
+                }
+                return render(request, 'auction/banned_auctions_list.html', context)
+            else:
+                messages.success(request, 'You need to login as Admin to browse banned auctions.')
+                return redirect('account:index')
+        else:
+            return redirect('account:login')
+    else:
+        return redirect('account:login')
+
+
 def auction_edit(request, id):
     if 'logged_in' in request.session:
         if request.session['logged_in'] is True:
@@ -172,10 +197,10 @@ def auction_ban(request, id):
                     return redirect('account:index')
                 return render(request, 'auction/auction_ban.html', context)
             else:
-                messages.success(request, 'You need to login as Admin to ban an auction.')
+                messages.error(request, 'You need to login as Admin to ban an auction.')
                 return redirect('account:index')
         else:
-            messages.success(request, 'Login as Admin')
+            messages.error(request, 'Login as Admin')
             return redirect('account:login')
     else:
         messages.error(request, 'Login as Admin')

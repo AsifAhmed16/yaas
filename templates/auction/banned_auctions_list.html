@@ -3,7 +3,7 @@
 {% block content %}
     <div class="container">
         <div class="section">
-            <p class="caption">List of Auction.</p>
+            <p class="caption">List of Banned Auctions</p>
             <div class="divider"></div>
             <div>
                 {% if messages %}
@@ -25,34 +25,28 @@
                 {% endif %}
             </div>
             <div id="bordered-table">
-                <h4 class="header">Auctions By {{ data.username }}</h4>
+                <h4 class="header">Banned By {{ data.username }}</h4>
                 <div class="row">
                     <div class="col s12 m4 l3">
-                        <p>Added auctions ... </p>
+                        <p>Items ... </p>
                     </div>
                     <div class="col s12 m8 l9">
                         <table class="bordered">
                             <thead>
                             <tr>
                                 <th data-field="id">Title</th>
+                                <th data-field="seller">Seller</th>
                                 <th data-field="name">Minimum Price</th>
                                 <th data-field="price">Deadline</th>
-                                <th data-field="action">Action</th>
                             </tr>
                             </thead>
                             <tbody>
                             {% for data in list %}
                                 <tr>
                                     <td>{{ data.title }}</td>
+                                    <td>{{ data.seller.username }}</td>
                                     <td>{{ data.min_price }}</td>
                                     <td>{{ data.deadline }}</td>
-                                    <td class="text-right">
-                                        <ul class="dropdown-menu pull-right">
-                                            <li><a href="{% url 'auction:auction_edit' data.id %}"
-                                                   title="Edit"><i class="mdi-editor-border-color"></i> Edit</a>
-                                            </li>
-                                        </ul>
-                                    </td>
                                 </tr>
                             {% endfor %}
                             </tbody>

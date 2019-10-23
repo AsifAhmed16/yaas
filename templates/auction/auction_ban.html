@@ -1,28 +1,34 @@
 {% extends 'includes/base.html' %}
+{% load static %}
 
 {% block content %}
-
     <div class="container">
         <div class="section">
             <p class="caption">Selected Auction.</p>
+            <span style="float: right">
+                <a class="btn waves-effect waves-light grey" href="{% url 'auction:banned_auctions_list' %}">Browse Banned Auctions<i
+                        class="mdi-action-open-in-browser left"></i></a>
+            </span>
             <div class="divider"></div>
-            {% if messages %}
-                {% for message in messages %}
-                    {% if message.level_tag == 'error' %}
-                        <div class="alert alert-danger" role="alert">
-                            <strong>
-                                {{ message.message }}
-                            </strong>
-                        </div>
-                    {% elif message.level_tag == 'success' %}
-                        <div class=" alert alert-success" role="alert">
-                            <strong>
-                                {{ message.message }}
-                            </strong>
-                        </div>
-                    {% endif %}
-                {% endfor %}
-            {% endif %}
+            <div>
+                {% if messages %}
+                    {% for message in messages %}
+                        {% if message.level_tag == 'error' %}
+                            <div id="card-alert" class="card red lighten-5">
+                                <div class="card-content red-text">
+                                    <p><strong>{{ message.message }}</strong></p>
+                                </div>
+                            </div>
+                        {% elif message.level_tag == 'success' %}
+                            <div id="card-alert" class="card green lighten-5">
+                                <div class="card-content green-text">
+                                    <p>{{ message.message }}</p>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </div>
             <div id="icon-prefixes" class="section">
                 <h4 class="header">Auction Details</h4>
                 <div class="row">
@@ -35,13 +41,13 @@
                     </div>
                     <div class="col s12 m8 l9">
                         <div class="row">
-                            <form action="" class="col s12" method="post" enctype="multipart/form-data" id="bid_form">
+                            <form action="" class="col s12" method="post" enctype="multipart/form-data" id="ban_form">
                                 {% csrf_token %}
                                 <div class="row">
                                     <div class="input-field col s12">
-                                        <button class="btn cyan waves-effect waves-light right" type="submit"
-                                                name="action">Submit
-                                            <i class="mdi-content-send right"></i>
+                                        <button class="btn waves-effect waves-light red" type="submit"
+                                                name="action">Ban
+                                            <i class="mdi-content-block right"></i>
                                         </button>
                                     </div>
                                 </div>
@@ -62,6 +68,7 @@
                 confirmMessage();
             });
         });
+
         function confirmMessage() {
             swal({
                     title: "Auction Ban",
@@ -74,13 +81,13 @@
                     closeOnConfirm: false,
                     closeOnCancel: false
                 },
-                function(isConfirm){
-                if (!(isConfirm)) {
-                    swal("Operation cancelled.", "success");
-                } else {
-                    $("#ban_form").unbind('submit').submit();
-                }
-            });
+                function (isConfirm) {
+                    if (!(isConfirm)) {
+                        swal("Operation cancelled.", "Item is active");
+                    } else {
+                        $("#ban_form").unbind('submit').submit();
+                    }
+                });
         }
     </script>
 

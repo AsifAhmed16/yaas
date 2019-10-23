@@ -6,23 +6,25 @@
         <div class="section">
             <p class="caption">List Products</p>
             <div class="divider"></div>
-            {% if messages %}
-                {% for message in messages %}
-                    {% if message.level_tag == 'error' %}
-                        <div class="alert alert-danger" role="alert">
-                            <strong>
-                                {{ message.message }}
-                            </strong>
-                        </div>
-                    {% elif message.level_tag == 'success' %}
-                        <div class=" alert alert-success" role="alert">
-                            <strong>
-                                {{ message.message }}
-                            </strong>
-                        </div>
-                    {% endif %}
-                {% endfor %}
-            {% endif %}
+            <div>
+                {% if messages %}
+                    {% for message in messages %}
+                        {% if message.level_tag == 'error' %}
+                            <div id="card-alert" class="card red lighten-5">
+                                <div class="card-content red-text">
+                                    <p><strong>{{ message.message }}</strong></p>
+                                </div>
+                            </div>
+                        {% elif message.level_tag == 'success' %}
+                            <div id="card-alert" class="card green lighten-5">
+                                <div class="card-content green-text">
+                                    <p>{{ message.message }}</p>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </div>
             <div id="icon-prefixes" class="section">
                 <div class="row">
                     <div class="col s12 m8 l9">

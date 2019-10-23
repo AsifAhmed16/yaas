@@ -10,16 +10,16 @@
         {% if messages %}
             {% for message in messages %}
                 {% if message.level_tag == 'error' %}
-                    <div class="alert alert-danger" role="alert">
-                        <strong>
-                            {{ message.message }}
-                        </strong>
+                    <div id="card-alert" class="card red lighten-5">
+                        <div class="card-content red-text">
+                            <p><strong>{{ message.message }}</strong></p>
+                        </div>
                     </div>
                 {% elif message.level_tag == 'success' %}
-                    <div class=" alert alert-success" role="alert">
-                        <strong>
-                            {{ message.message }}
-                        </strong>
+                    <div id="card-alert" class="card green lighten-5">
+                        <div class="card-content green-text">
+                            <p>{{ message.message }}</p>
+                        </div>
                     </div>
                 {% endif %}
             {% endfor %}
@@ -54,8 +54,10 @@
                                     </ul>
                                 </div>
                                 <div class="card-action center-align">
-                                    <a href="{% url 'auction:auction_bid' each.id %}" class="waves-effect waves-light btn green">Make a Bid</a>
-                                    <a href="{% url 'auction:auction_ban' each.id %}" class="waves-effect waves-light btn red">Ban Auction</a>
+                                    <a href="{% url 'auction:auction_bid' each.id %}"
+                                       class="waves-effect waves-light btn green">Make a Bid</a>
+                                    <a href="{% url 'auction:auction_ban' each.id %}"
+                                       class="waves-effect waves-light btn red">Ban Auction</a>
                                 </div>
                             </div>
                         </article>
