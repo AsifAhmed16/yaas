@@ -70,9 +70,12 @@
                                     <td>{{ data.deadline }}</td>
                                     <td class="text-right">
                                         <ul class="dropdown-menu pull-right">
-                                            <li><a href="{% url 'auction:auction_bid' data.id %}"
+                                            <li>
+                                                <a href="{% url 'auction:auction_bid' data.id %}" class="btn waves-effect waves-light green"
                                                    title="Edit"><i class="mdi-action-add-shopping-cart"></i> Bid</a>
                                             </li>
+                                            <li><a href="{% url 'auction:auction_ban' data.id %}" class="btn waves-effect waves-light red"
+                                                   title="Edit"><i class="mdi-content-block"></i> Ban</a></li>
                                         </ul>
                                     </td>
                                 </tr>
