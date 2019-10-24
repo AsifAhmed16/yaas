@@ -193,6 +193,7 @@ def auction_ban(request, id):
                         status_id=Auction_Status.objects.get(status="Banned").id,
                         version=auc_obj.version + 1
                     )
+                    ban_mail_notification(request, updated)
                     messages.success(request, 'Auction Banned Successfully')
                     return redirect('account:index')
                 return render(request, 'auction/auction_ban.html', context)
@@ -285,6 +286,28 @@ def auction_confirm(request, id):
         messages.success(request, 'Auction Added Successfully.')
         return redirect('account:index')
     return render(request, 'auction/auction_add.html', context)
+
+
+def ban_mail_notification(request, bid_id):
+    bid_obj = Bid.objects.get(id=bid_id)
+    b_mailbody = "Dear " + bid_obj.bidder.username + "," + '\n' + '\n' \
+                 + "Thanks for bidding. Below here is the auction you bid for." + '\n' + '\n' \
+                 + "Auction Details :::: Title - " + bid_obj.auction.title + " Price - " + str(bid_obj.auction.min_price) + '\n' + '\n' + \
+                 "Bid Price: " + str(bid_obj.bid_price) + '\n' + '\n'
+    b_email = bid_obj.bidder.email
+    s_email = bid_obj.auction.seller.email
+    b_mailbody = b_mailbody + '\n' + "Thanks." + '\n' + "YAAS Team."
+    s_mailbody = "Dear " + bid_obj.auction.seller.username + "," + '\n' + '\n' \
+                 + "A bid just took place. Below here is the details of the auction you created." + '\n' + '\n' \
+                 + "Auction Details :::: Title - " + bid_obj.auction.title + " Price - " + str(bid_obj.auction.min_price) + '\n' + '\n' + \
+                 "Latest Bid Price: " + str(bid_obj.bid_price) + '\n' + '\n'
+    s_mailbody = s_mailbody + '\n' + "Thanks." + '\n' + "YAAS Team."
+    if is_connected():
+        send_mail("New Auction", b_mailbody, "YAAS Admin", [b_email])
+        send_mail("New Auction", s_mailbody, "YAAS Admin", [s_email])
+    else:
+        messages.error(request, 'Network Error. Check your internet connection.')
+    return
 
 
 def bid_mail_notification(request, bid_id):
