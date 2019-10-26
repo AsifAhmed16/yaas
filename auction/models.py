@@ -55,8 +55,8 @@ class Bid(models.Model):
     created_date = models.DateTimeField()
     version = models.IntegerField(default=0)
 
-    def __str__(self):
-        return self.bid_price
+    def __int__(self):
+        return self.auction_id
 
     class Meta:
         db_table = 'Bid'

@@ -19,7 +19,7 @@ class AuctionForm(forms.ModelForm):
     class Meta:
         model = Auction
         fields = '__all__'
-        exclude = ('title', 'min_price', 'seller', 'status', 'deadline', 'created_date')
+        exclude = ('title', 'min_price', 'seller', 'status', 'deadline', 'created_date', 'version')
         widgets = {
             "description": forms.Textarea(attrs={'class': 'form-control'}),
         }
@@ -41,7 +41,7 @@ class BidForm(forms.ModelForm):
     class Meta:
         model = Bid
         fields = '__all__'
-        exclude = ('auction', 'bidder', 'created_date')
+        exclude = ('auction', 'bidder', 'created_date', 'version')
         widgets = {
             "bid_price": forms.NumberInput(attrs={'class': 'form-control'}),
         }

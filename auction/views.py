@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect
 from .forms import *
 from django.contrib import messages
 from datetime import datetime, timedelta
-from .tasks import set_deadline
+from .tasks import set_deadline, resolve_auction
 from django.core.mail import send_mail
 import socket
 from .models import *
@@ -193,7 +193,7 @@ def auction_ban(request, id):
                         status_id=Auction_Status.objects.get(status="Banned").id,
                         version=auc_obj.version + 1
                     )
-                    ban_mail_notification(request, updated)
+                    ban_mail_notification(request, auc_obj.id)
                     messages.success(request, 'Auction Banned Successfully')
                     return redirect('account:index')
                 return render(request, 'auction/auction_ban.html', context)
@@ -282,29 +282,34 @@ def auction_confirm(request, id):
                                    created_date=datetime.now())
             auction = Auction.objects.latest('id')
             _post_tasks(request, auction.id)
+            _post_resolve(request, auction.id)
             temp.delete()
         messages.success(request, 'Auction Added Successfully.')
         return redirect('account:index')
     return render(request, 'auction/auction_add.html', context)
 
 
-def ban_mail_notification(request, bid_id):
-    bid_obj = Bid.objects.get(id=bid_id)
-    b_mailbody = "Dear " + bid_obj.bidder.username + "," + '\n' + '\n' \
-                 + "Thanks for bidding. Below here is the auction you bid for." + '\n' + '\n' \
-                 + "Auction Details :::: Title - " + bid_obj.auction.title + " Price - " + str(bid_obj.auction.min_price) + '\n' + '\n' + \
-                 "Bid Price: " + str(bid_obj.bid_price) + '\n' + '\n'
-    b_email = bid_obj.bidder.email
-    s_email = bid_obj.auction.seller.email
-    b_mailbody = b_mailbody + '\n' + "Thanks." + '\n' + "YAAS Team."
-    s_mailbody = "Dear " + bid_obj.auction.seller.username + "," + '\n' + '\n' \
-                 + "A bid just took place. Below here is the details of the auction you created." + '\n' + '\n' \
-                 + "Auction Details :::: Title - " + bid_obj.auction.title + " Price - " + str(bid_obj.auction.min_price) + '\n' + '\n' + \
-                 "Latest Bid Price: " + str(bid_obj.bid_price) + '\n' + '\n'
+def ban_mail_notification(request, ban_auc):
+    auc_obj = Auction.objects.get(id=ban_auc)
+    s_mailbody = "Dear " + auc_obj.seller.username + "," + '\n' + '\n' \
+                 + "The Auction Created By You as Stated Below is Banned by Admin." + '\n' + '\n' \
+                 + "Auction Details :::: Title - " + auc_obj.title + " Price - " + str(auc_obj.min_price) + '\n' + '\n'
+    s_email = auc_obj.seller.email
     s_mailbody = s_mailbody + '\n' + "Thanks." + '\n' + "YAAS Team."
+
     if is_connected():
-        send_mail("New Auction", b_mailbody, "YAAS Admin", [b_email])
         send_mail("New Auction", s_mailbody, "YAAS Admin", [s_email])
+        bid_objs = Bid.objects.filter(auction=auc_obj)
+        email_list = []
+        for each in bid_objs:
+            b_email = each.bidder.email
+            email_list.append(b_email)
+        email_list = list(set(email_list))
+        for each in email_list:
+            usr = User.objects.get(email=each)
+            b_mailbody = "Dear " + usr.username + "," + '\n' + '\n' + "A bid you made has been Banned by Admin.." + '\n' + '\n'
+            b_mailbody = b_mailbody + '\n' + "Thanks." + '\n' + "YAAS Team."
+            send_mail("New Auction", b_mailbody, "YAAS Admin", [each])
     else:
         messages.error(request, 'Network Error. Check your internet connection.')
     return
@@ -349,6 +354,11 @@ def mail_notification(request, id, temp_auc):
 # python3 manage.py process_tasks
 def _post_tasks(request, auction_id):
     result = set_deadline(int(auction_id))
+    return result
+
+
+def _post_resolve(request, auction_id):
+    result = resolve_auction(int(auction_id))
     return result
 
 
