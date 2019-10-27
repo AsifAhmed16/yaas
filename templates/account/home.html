@@ -2,13 +2,6 @@
 {% load static %}
 
 {% block content %}
-    <div align="right">
-    {% if data.language == "Eng" %}
-                                Welcome to YAAS - {{ data.username }}
-                            {% else %}
-                                Tervetuloa että YAAS - {{ data.username }}
-                            {% endif %}
-    </div>
     <div>
         {% if messages %}
             {% for message in messages %}
@@ -32,20 +25,20 @@
         <div class="section">
             <p class="caption">
                 {% if data.language == "Eng" %}
-                                YAAS is a web application and a web service to create and participate in auctions.
-                            {% else %}
-                                YAAS on verkkosovellus ja verkkopalvelu huutokauppojen luomiseen ja niihin osallistumiseen.
-                            {% endif %}
+                    Welcome to YAAS - <span style="color: purple">{{ data.username }}</span>. YAAS is a web application and a web service to create and participate in auctions.
+                {% else %}
+                    Tervetuloa että YAAS - {{ data.username }}. YAAS on verkkosovellus ja verkkopalvelu huutokauppojen luomiseen ja niihin osallistumiseen.
+                {% endif %}
             </p>
             <div class="divider"></div>
             <div class="row">
                 <div class="col s12">
                     <h4 class="header">
                         {% if data.language == "Eng" %}
-                                Active Products: Ready For Auction ...
-                            {% else %}
-                                Aktiiviset tuotteet: Valmis huutokauppaan ...
-                            {% endif %}
+                            Active Products: Ready For Auction ...
+                        {% else %}
+                            Aktiiviset tuotteet: Valmis huutokauppaan ...
+                        {% endif %}
                     </h4>
                 </div>
                 <section class="plans-container" id="plans">
@@ -56,34 +49,34 @@
                                     <div class="card-title">{{ each.title }}</div>
                                     <div class="price"><sup>
                                         {% if data.language == "Eng" %}
-                                Min Price
-                            {% else %}
-                                Minimi Hinta
-                            {% endif %}
+                                            Min Price
+                                        {% else %}
+                                            Minimi Hinta
+                                        {% endif %}
                                         - €</sup>{{ each.min_price }}<sub>/EUR</sub></div>
                                     <div class="price-desc">
                                         {% if data.language == "Eng" %}
-                                Posted On
-                            {% else %}
-                                Lähettäjä
-                            {% endif %}
+                                            Posted On
+                                        {% else %}
+                                            Lähettäjä
+                                        {% endif %}
                                         - {{ each.created_date }}</div>
                                     <div class="price-desc">
                                         {% if data.language == "Eng" %}
-                                Deadline
-                            {% else %}
-                                Takaraja
-                            {% endif %}
+                                            Deadline
+                                        {% else %}
+                                            Takaraja
+                                        {% endif %}
                                         - {{ each.deadline }}</div>
                                 </div>
                                 <div class="card-content">
                                     <ul class="collection" style="background-color: white">
                                         <li class="collection-item">
                                             {% if data.language == "Eng" %}
-                                Description
-                            {% else %}
-                                Kuvaus
-                            {% endif %}
+                                                Description
+                                            {% else %}
+                                                Kuvaus
+                                            {% endif %}
                                             - <br>
                                             {{ each.description }}
                                         </li>
@@ -96,18 +89,18 @@
                                     <a href="{% url 'auction:auction_bid' each.id %}"
                                        class="waves-effect waves-light btn green">
                                         {% if data.language == "Eng" %}
-                                Make a Bid
-                            {% else %}
-                                Tee tarjous
-                            {% endif %}
+                                            Make a Bid
+                                        {% else %}
+                                            Tee tarjous
+                                        {% endif %}
                                     </a>
                                     <a href="{% url 'auction:auction_ban' each.id %}"
                                        class="waves-effect waves-light btn red">
                                         {% if data.language == "Eng" %}
-                                Ban Auction
-                            {% else %}
-                                Kieltää huutokauppa
-                            {% endif %}
+                                            Ban Auction
+                                        {% else %}
+                                            Kieltää huutokauppa
+                                        {% endif %}
                                     </a>
                                 </div>
                             </div>
