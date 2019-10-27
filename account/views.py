@@ -55,7 +55,10 @@ def login_validate(request):
         except Exception as ex:
             user = None
         if user is None:
-            messages.error(request, 'Username Mismatch!')
+            if request.session['language'] == "Eng":
+                messages.error(request, 'Username Mismatched')
+            else:
+                messages.error(request, 'Käyttäjätunnus Ristiriitaiset')
             return redirect('account:login')
         else:
             if user.password == password:
@@ -65,7 +68,10 @@ def login_validate(request):
                 request.session['language'] = user.language
                 return redirect("account:index")
             else:
-                messages.error(request, 'Incorrect Password!')
+                if request.session['language'] == "Eng":
+                    messages.error(request, 'Wrong Password')
+                else:
+                    messages.error(request, 'Väärin Salasana')
                 return redirect('account:login')
     return render(request, 'account/login.html')
 
@@ -77,19 +83,31 @@ def register(request):
         password_again = request.POST['password-again']
         email = request.POST['email']
         if password != password_again:
-            messages.error(request, 'Password did not match. Try again.')
+            if request.session['language'] == "Eng":
+                messages.error(request, 'Password Mismatched. Try Again')
+            else:
+                messages.error(request, 'Salasana Ristiriitaiset. Yritä Uudelleen')
             return render(request, 'account/register.html')
         try:
             if User.objects.filter(username=username).exists():
-                messages.error(request, 'That username is already taken.')
+                if request.session['language'] == "Eng":
+                    messages.error(request, 'That username is already taken.')
+                else:
+                    messages.error(request, 'Tämä käyttäjätunnus on jo varattu.')
                 return render(request, 'account/register.html')
             if User.objects.filter(email=email).exists():
-                messages.error(request, 'That email id is already taken.')
+                if request.session['language'] == "Eng":
+                    messages.error(request, 'That email id is already taken.')
+                else:
+                    messages.error(request, 'Tämä sähköpostiosoite on jo otettu.')
                 return render(request, 'account/register.html')
             User.objects.create(username=username, password=password, email=email, role=Role.objects.get(id=2), language=request.session['language'])
         except Exception as ex:
             print(ex)
-            messages.error(request, 'Sorry !!! Something Went Wrong.')
+            if request.session['language'] == "Eng":
+                messages.error(request, 'Sorry !!! Something Went Wrong.')
+            else:
+                messages.error(request, 'Anteeksi !!! Jotain Meni Pieleen.')
             return render(request, 'account/register.html')
         return redirect('account:login')
     else:
@@ -117,13 +135,22 @@ def change_email(request):
                         if current == user.email:
                             user.email = new
                             user.save()
-                            messages.success(request, 'Email Updated Successfully')
+                            if request.session['language'] == "Eng":
+                                messages.success(request, 'Email Updated Successfully')
+                            else:
+                                messages.success(request, 'Sähköposti Päivitetty')
                             return redirect('account:index')
                         else:
-                            messages.error(request, 'Email Mismatched')
+                            if request.session['language'] == "Eng":
+                                messages.error(request, 'Email Mismatched')
+                            else:
+                                messages.error(request, 'Sähköposti Ristiriitaiset')
                             return redirect('account:change_email')
                     else:
-                        messages.error(request, 'Wrong Password')
+                        if request.session['language'] == "Eng":
+                            messages.error(request, 'Wrong Password')
+                        else:
+                            messages.error(request, 'Väärin Salasana')
                         return redirect('account:change_email')
                 return render(request, 'account/change_email.html', context)
         else:
@@ -154,13 +181,22 @@ def change_password(request):
                         if new == confirm:
                             user.password = new
                             user.save()
-                            messages.success(request, 'Password Updated Successfully')
+                            if request.session['language'] == "Eng":
+                                messages.success(request, 'Password Updated Successfully')
+                            else:
+                                messages.success(request, 'Salasana Päivitetty')
                             return redirect('account:index')
                         else:
-                            messages.error(request, 'Password Mismatched')
+                            if request.session['language'] == "Eng":
+                                messages.error(request, 'Password Mismatched')
+                            else:
+                                messages.error(request, 'Salasana Ristiriitaiset')
                             return redirect('account:change_password')
                     else:
-                        messages.error(request, 'Wrong Password')
+                        if request.session['language'] == "Eng":
+                            messages.error(request, 'Wrong Password')
+                        else:
+                            messages.error(request, 'Väärin Salasana')
                         return redirect('account:change_password')
                 return render(request, 'account/change_password.html', context)
         else:

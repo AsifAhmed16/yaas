@@ -70,26 +70,80 @@
 
 <main>
     <ul>
-        <li><a class="active" href="{% url 'account:index' %}">Home</a></li>
-        <li><a href="{% url 'auction:auction_add' %}">Auction</a></li>
-        <li><a href="{% url 'auction:auction_browse' %}">Quick Browse</a></li>
-        <li><a href="{% url 'auction:banned_auctions_list' %}">Banned Auctions</a></li>
+        <li><a class="active" href="{% url 'account:index' %}">
+            {% if data.language == "Eng" %}
+                Home
+            {% else %}
+                Koti
+            {% endif %}
+        </a></li>
+        <li><a href="{% url 'auction:auction_add' %}">
+            {% if data.language == "Eng" %}
+                Auction
+            {% else %}
+                Huutokauppa
+            {% endif %}
+        </a></li>
+        <li><a href="{% url 'auction:auction_browse' %}">
+            {% if data.language == "Eng" %}
+                Quick Browse
+            {% else %}
+                Nopea Näyttää
+            {% endif %}
+        </a></li>
+        <li><a href="{% url 'auction:banned_auctions_list' %}">
+            {% if data.language == "Eng" %}
+                Banned Auctions
+            {% else %}
+                Kieltää Huutokauppa
+            {% endif %}
+        </a></li>
         {% if data.logged_in %}
             <li style="float: right; color: white">
-                <a href="{% url 'account:change_email' %}"> Change Email </a>
+                <a href="{% url 'account:change_email' %}">
+                    {% if data.language == "Eng" %}
+                        Change Email
+                    {% else %}
+                        Muuttaa Sähköposti
+                    {% endif %}
+                </a>
             </li>
             <li style="float: right; color: white">
-                <a href="{% url 'account:change_password' %}"> Change Password </a>
+                <a href="{% url 'account:change_password' %}">
+                    {% if data.language == "Eng" %}
+                        Change Password
+                    {% else %}
+                        Muuttaa Salasana
+                    {% endif %}
+                </a>
             </li>
             <li style="float: right; color: white">
-                <a href="{% url 'account:logout' %}"> Logout </a>
+                <a href="{% url 'account:logout' %}">
+                    {% if data.language == "Eng" %}
+                        Logout
+                    {% else %}
+                        Merkitä Lainatuksi
+                    {% endif %}
+                </a>
             </li>
         {% else %}
             <li style="float: right; color: white">
-                <a href="{% url 'account:login' %}">Sign In</a>
+                <a href="{% url 'account:login' %}">
+                    {% if data.language == "Eng" %}
+                        Sign In
+                    {% else %}
+                        Ilmoittautua
+                    {% endif %}
+                </a>
             </li>
             <li style="float: right; color: white">
-                <a href="{% url 'account:register' %}">Register</a>
+                <a href="{% url 'account:register' %}">
+                    {% if data.language == "Eng" %}
+                        Register
+                    {% else %}
+                        Rekisteröinti
+                    {% endif %}
+                </a>
             </li>
         {% endif %}
     </ul>
@@ -141,6 +195,7 @@
             document.getElementById("language").value = "Eng";
             document.getElementById("myForm").submit();
         }
+
         function Fin_Clicked() {
             document.getElementById("language").value = "Fin";
             document.getElementById("myForm").submit();

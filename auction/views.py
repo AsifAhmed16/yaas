@@ -54,7 +54,10 @@ def auction_add(request):
                         form.save()
                         temp = Auction_Temp.objects.latest('id')
                         mail_notification(request, request.session['id'], temp.id)
-                        messages.success(request, 'A request mail has been sent...Please check your Email')
+                        if request.session['language'] == "Eng":
+                            messages.success(request, 'A request mail has been sent...Please check your Email')
+                        else:
+                            messages.success(request, 'Pyyntöviesti on lähetetty...Ole hyvä ja tarkista sähköpostisi.')
                         return redirect('account:index')
                     else:
                         print(form.errors)
@@ -62,14 +65,23 @@ def auction_add(request):
                             'data': userdata,
                             'form': form
                         }
-                        messages.error(request, 'Sorry...Something went wrong.')
+                        if request.session['language'] == "Eng":
+                            messages.error(request, 'Sorry !!! Something Went Wrong.')
+                        else:
+                            messages.error(request, 'Anteeksi !!! Jotain Meni Pieleen.')
                         return render(request, 'auction/auction_add.html', context)
                 return render(request, 'auction/auction_add.html', context)
             else:
-                messages.error(request, 'Please login before creating an auction.')
+                if request.session['language'] == "Eng":
+                    messages.error(request, 'Please login before creating an auction.')
+                else:
+                    messages.error(request, 'Ole hyvä ja kirjaudu sisään ennen huutokaupan luomista')
                 return redirect('account:login')
         else:
-            messages.error(request, 'Please login before creating an auction.')
+            if request.session['language'] == "Eng":
+                messages.error(request, 'Please login before creating an auction.')
+            else:
+                messages.error(request, 'Ole hyvä ja kirjaudu sisään ennen huutokaupan luomista')
             return redirect('account:login')
     except Exception as ex:
         print(ex)
@@ -137,7 +149,10 @@ def banned_auctions_list(request):
                 }
                 return render(request, 'auction/banned_auctions_list.html', context)
             else:
-                messages.success(request, 'You need to login as Admin to browse banned auctions.')
+                if request.session['language'] == "Eng":
+                    messages.error(request, 'You need to login as Admin to browse banned auctions.')
+                else:
+                    messages.error(request, 'Sinun on kirjauduttava sisään järjestelmänvalvojana selataksesi kiellettyjä huutokauppoja')
                 return redirect('account:index')
         else:
             return redirect('account:login')
@@ -164,7 +179,10 @@ def auction_edit(request, id):
                     description=request.POST['description'],
                     version=auc_obj.version + 1
                 )
-                messages.success(request, 'Description Updated Successfully')
+                if request.session['language'] == "Eng":
+                    messages.success(request, 'Description Updated Successfully')
+                else:
+                    messages.success(request, 'Sähköposti Päivitetty')
                 return redirect('auction:auction_list')
             return render(request, 'auction/auction_edit.html', context)
         else:
@@ -194,17 +212,29 @@ def auction_ban(request, id):
                         version=auc_obj.version + 1
                     )
                     ban_mail_notification(request, auc_obj.id)
-                    messages.success(request, 'Auction Banned Successfully')
+                    if request.session['language'] == "Eng":
+                        messages.success(request, 'Auction Banned Successfully')
+                    else:
+                        messages.success(request, 'Huutokauppa kielletty Päivitetty')
                     return redirect('account:index')
                 return render(request, 'auction/auction_ban.html', context)
             else:
-                messages.error(request, 'You need to login as Admin to ban an auction.')
+                if request.session['language'] == "Eng":
+                    messages.error(request, 'You need to login as Admin to ban an auction.')
+                else:
+                    messages.error(request, 'Sinun on kirjauduttava sisään järjestelmänvalvojana estääksesi huutokaupan')
                 return redirect('account:index')
         else:
-            messages.error(request, 'Login as Admin')
+            if request.session['language'] == "Eng":
+                messages.error(request, 'Login as Admin')
+            else:
+                messages.error(request, 'Kirjaudu sisään järjestelmänvalvojana')
             return redirect('account:login')
     else:
-        messages.error(request, 'Login as Admin')
+        if request.session['language'] == "Eng":
+            messages.error(request, 'Login as Admin')
+        else:
+            messages.error(request, 'Kirjaudu sisään järjestelmänvalvojana')
         return redirect('account:login')
 
 
@@ -213,7 +243,10 @@ def auction_bid(request, id):
         if request.session['logged_in'] is True:
             auc_obj = Auction.objects.get(id=id)
             if auc_obj.seller.id == request.session['id']:
-                messages.error(request, 'You are not allowed to bid on your own created auction.')
+                if request.session['language'] == "Eng":
+                    messages.error(request, 'You are not allowed to bid on your own created auction.')
+                else:
+                    messages.error(request, 'Et voi tehdä tarjouksia omasta huutokaupasta.')
                 return redirect('account:index')
             min_bid = auc_obj.min_price
             pre_bid = Bid.objects.filter(auction=auc_obj)
@@ -237,14 +270,23 @@ def auction_bid(request, id):
                                    created_date=datetime.now())
                 bid_id = Bid.objects.latest('id').id
                 bid_mail_notification(request, bid_id)
-                messages.success(request, 'Bid Placed Successfully.')
+                if request.session['language'] == "Eng":
+                    messages.success(request, 'Bid Placed Successfully.')
+                else:
+                    messages.success(request, 'Tarjous onnistunut')
                 return redirect('account:index')
             return render(request, 'auction/auction_bid.html', context)
         else:
-            messages.error(request, 'Please login before bidding an auction.')
+            if request.session['language'] == "Eng":
+                messages.error(request, 'Please login before bidding an auction.')
+            else:
+                messages.error(request, 'Ole hyvä ja kirjaudu sisään ennen huutokaupan tarjoamista')
             return redirect('account:login')
     else:
-        messages.error(request, 'Please login before bidding an auction.')
+        if request.session['language'] == "Eng":
+            messages.error(request, 'Please login before bidding an auction.')
+        else:
+            messages.error(request, 'Ole hyvä ja kirjaudu sisään ennen huutokaupan tarjoamista')
         return redirect('account:login')
 
 
@@ -252,7 +294,10 @@ def auction_confirm(request, id):
     try:
         temp = Auction_Temp.objects.get(pk=id)
     except Exception as e:
-        messages.error(request, 'Sorry...Link is no more valid.')
+        if request.session['language'] == "Eng":
+            messages.error(request, 'Sorry...Link is no more valid.')
+        else:
+            messages.error(request, 'Anteeksi...Linkki ei ole enää kelvollinen.')
         return redirect('account:index')
     user = User.objects.get(pk=temp.seller.id)
     request.session['logged_in'] = True
@@ -284,7 +329,10 @@ def auction_confirm(request, id):
             _post_tasks(request, auction.id)
             _post_resolve(request, auction.id)
             temp.delete()
-        messages.success(request, 'Auction Added Successfully.')
+        if request.session['language'] == "Eng":
+            messages.success(request, 'Auction Added Successfully.')
+        else:
+            messages.success(request, 'Lisää onnistunut.')
         return redirect('account:index')
     return render(request, 'auction/auction_add.html', context)
 
@@ -311,7 +359,10 @@ def ban_mail_notification(request, ban_auc):
             b_mailbody = b_mailbody + '\n' + "Thanks." + '\n' + "YAAS Team."
             send_mail("New Auction", b_mailbody, "YAAS Admin", [each])
     else:
-        messages.error(request, 'Network Error. Check your internet connection.')
+        if request.session['language'] == "Eng":
+            messages.error(request, 'Network Error. Check your internet connection.')
+        else:
+            messages.error(request, 'Verkkovirhe. Tarkista Internet-yhteytesi.')
     return
 
 
@@ -333,7 +384,10 @@ def bid_mail_notification(request, bid_id):
         send_mail("New Auction", b_mailbody, "YAAS Admin", [b_email])
         send_mail("New Auction", s_mailbody, "YAAS Admin", [s_email])
     else:
-        messages.error(request, 'Network Error. Check your internet connection.')
+        if request.session['language'] == "Eng":
+            messages.error(request, 'Network Error. Check your internet connection.')
+        else:
+            messages.error(request, 'Verkkovirhe. Tarkista Internet-yhteytesi.')
     return
 
 
@@ -347,7 +401,10 @@ def mail_notification(request, id, temp_auc):
     if is_connected():
         send_mail("New Auction", mailbody, "YAAS Admin", [email])
     else:
-        messages.error(request, 'Network Error. Check your internet connection.')
+        if request.session['language'] == "Eng":
+            messages.error(request, 'Network Error. Check your internet connection.')
+        else:
+            messages.error(request, 'Verkkovirhe. Tarkista Internet-yhteytesi.')
     return
 
 
