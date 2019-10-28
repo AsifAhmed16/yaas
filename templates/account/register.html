@@ -22,37 +22,78 @@
                     <div class="input-field col s12">
                         <i class="mdi-social-person-outline prefix"></i>
                         <input id="username" name="username" type="text" required>
-                        <label for="username" class="center-align">Username</label>
+                        <label for="username" class="center-align">
+                            {% if data.language == "Eng" %}
+                                Username
+                            {% else %}
+                                Käyttäjätunnus
+                            {% endif %}
+                        </label>
                     </div>
                 </div>
                 <div class="row margin">
                     <div class="input-field col s12">
                         <i class="mdi-communication-email prefix"></i>
                         <input id="email" name="email" type="email" required>
-                        <label for="email" class="center-align">Email</label>
+                        <label for="email" class="center-align">
+                            {% if data.language == "Eng" %}
+                                Email
+                            {% else %}
+                                Sähköposti
+                            {% endif %}
+                        </label>
                     </div>
                 </div>
                 <div class="row margin">
                     <div class="input-field col s12">
                         <i class="mdi-action-lock-outline prefix"></i>
                         <input id="password" name="password" type="password" required>
-                        <label for="password">Password</label>
+                        <label for="password">
+                            {% if data.language == "Eng" %}
+                                Password
+                            {% else %}
+                                Salasana
+                            {% endif %}
+                        </label>
                     </div>
                 </div>
                 <div class="row margin">
                     <div class="input-field col s12">
                         <i class="mdi-action-lock-outline prefix"></i>
                         <input id="password-again" name="password-again" type="password" required>
-                        <label for="password-again">Password again</label>
+                        <label for="password-again">
+                            {% if data.language == "Eng" %}
+                                Password Again
+                            {% else %}
+                                Salasana Uudelleen
+                            {% endif %}
+                        </label>
                     </div>
                 </div>
                 <div class="row">
                     <div class="input-field col s12">
-                        <button class="btn waves-effect waves-light col s12">Register Now</button>
+                        <button class="btn waves-effect waves-light col s12">
+                            {% if data.language == "Eng" %}
+                                Register Now
+                            {% else %}
+                                Rekisteröidy nyt
+                            {% endif %}
+                        </button>
                     </div>
                     <div class="input-field col s12">
-                        <p class="margin center medium-small sign-up">Already have an account? <a
-                                href="{% url 'account:login' %}">Login</a></p>
+                        <p class="margin center medium-small sign-up">
+                            {% if data.language == "Eng" %}
+                                Already have an account
+                            {% else %}
+                                Onko sinulla jo tili
+                            {% endif %}
+                            <a href="{% url 'account:login' %}">
+                                {% if data.language == "Eng" %}
+                                    Login
+                                {% else %}
+                                    Kirjaudu sisään
+                                {% endif %}
+                            </a></p>
                     </div>
                 </div>
             </form>
