@@ -2,13 +2,6 @@
 {% load static %}
 
 {% block content %}
-    <div align="right">
-        {% if data.language == "Eng" %}
-            Welcome to YAAS - {{ data.username }}
-        {% else %}
-            Tervetuloa että YAAS - {{ data.username }}
-        {% endif %}
-    </div>
     <div>
         {% if messages %}
             {% for message in messages %}
@@ -32,9 +25,9 @@
         <div class="section">
             <p class="caption">
                 {% if data.language == "Eng" %}
-                    YAAS is a web application and a web service to create and participate in auctions.
+                    Welcome to YAAS - <span style="color: purple">{{ data.username }}</span>. YAAS is a web application and a web service to create and participate in auctions.
                 {% else %}
-                    YAAS on verkkosovellus ja verkkopalvelu huutokauppojen luomiseen ja niihin osallistumiseen.
+                    Tervetuloa että YAAS - {{ data.username }}. YAAS on verkkosovellus ja verkkopalvelu huutokauppojen luomiseen ja niihin osallistumiseen.
                 {% endif %}
             </p>
             <div class="divider"></div>

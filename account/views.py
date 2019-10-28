@@ -40,10 +40,22 @@ def index(request):
 
 
 def login(request):
+    if 'language' in request.session:
+        userdata = {
+            'language': request.session['language'],
+        }
+    else:
+        request.session['language'] = "Eng"
+        userdata = {
+            'language': "Eng",
+        }
+    context = {
+        'data': userdata
+    }
     if 'logged_in' in request.session:
         if request.session['logged_in'] is True:
             return redirect('account:index')
-    return render(request, 'account/login.html')
+    return render(request, 'account/login.html', context)
 
 
 def login_validate(request):
@@ -77,6 +89,18 @@ def login_validate(request):
 
 
 def register(request):
+    if 'language' in request.session:
+        userdata = {
+            'language': request.session['language'],
+        }
+    else:
+        request.session['language'] = "Eng"
+        userdata = {
+            'language': "Eng",
+        }
+    context = {
+        'data': userdata
+    }
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -111,7 +135,7 @@ def register(request):
             return render(request, 'account/register.html')
         return redirect('account:login')
     else:
-        return render(request, 'account/register.html')
+        return render(request, 'account/register.html', context)
 
 
 def change_email(request):
