@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from .forms import *
 from django.contrib import messages
 from auction.models import Auction, Auction_Status
+from django.http import HttpResponseRedirect
 
 
 def index(request):
@@ -27,6 +28,15 @@ def index(request):
                 'language': request.POST['language'],
             }
             context['data'] = userdata
+            if 'logged_in' in request.session:
+                if request.session['logged_in'] is True:
+                    userdata = {
+                        'username': request.session['username'],
+                        'logged_in': request.session['logged_in'],
+                        'language': request.session['language'],
+                    }
+                    context['data'] = userdata
+            return HttpResponseRedirect(request.path_info)
     if 'logged_in' in request.session:
         if request.session['logged_in'] is True:
             userdata = {
