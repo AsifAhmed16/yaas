@@ -12,6 +12,7 @@ import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from faker import Faker
+import random
 
 
 class CurrencyConverter:
@@ -219,13 +220,12 @@ def generate_user(request):
 
     for each in range(50):
         username = fake.name().replace(' ', '_').lower()
-        email = username + "@yaas.com"
-        User.objects.create(username=username, password=username, email=email, role=Role.objects.get(id=2), language=request.session['language'])
+        User.objects.create(username=username, password=username, email=fake.email(), role=Role.objects.get(id=2), language=request.session['language'])
     return render(request, 'auction/data_generation.html', context)
 
 
 def generate_auction(request):
-    fake = Faker('fi_FI')
+    fake = Faker()
     context = dict()
     if 'language' in request.session:
         userdata = {
@@ -238,15 +238,27 @@ def generate_auction(request):
         }
     context['data'] = userdata
 
+    sel = User.objects.all().values_list('id', flat=True)
+    answer_ids = list(sel)
+
     for each in range(50):
-        username = fake.name().replace(' ', '_').lower()
-        email = username + "@yaas.com"
-        User.objects.create(username=username, password=username, email=email, role=Role.objects.get(id=2), language=request.session['language'])
+        seller_id = random.choice(answer_ids)
+        Auction.objects.create(
+            title=fake.word(),
+            description=fake.sentence(nb_words=6),
+            seller_id=seller_id,
+            min_price=round(random.uniform(0.0, 9999.0), 2),
+            status=Auction_Status.objects.get(status="Active"),
+            deadline=datetime.now() + timedelta(days=3),
+            created_date=datetime.now())
+        auction = Auction.objects.latest('id')
+        _post_tasks(request, auction.id)
+        _post_resolve(request, auction.id)
+        # mail_auction_confirm_notification(request, seller_id)
     return render(request, 'auction/data_generation.html', context)
 
 
 def generate_bid(request):
-    fake = Faker('fi_FI')
     context = dict()
     if 'language' in request.session:
         userdata = {
@@ -259,11 +271,42 @@ def generate_bid(request):
         }
     context['data'] = userdata
 
+    auc_list = Auction.objects.all().values_list('id', flat=True)
+    bid_list = User.objects.all().values_list('id', flat=True)
+    auc_ids = list(auc_list)
+    bid_ids = list(bid_list)
+
     for each in range(50):
-        username = fake.name().replace(' ', '_').lower()
-        email = username + "@yaas.com"
-        User.objects.create(username=username, password=username, email=email, role=Role.objects.get(id=2), language=request.session['language'])
+        auc = random.choice(auc_ids)
+        bid = uniqueBidder(bid_ids, auc)
+        bid_price = maxPrice(auc)
+
+        Bid.objects.create(
+            auction_id=auc,
+            bidder_id=bid,
+            bid_price=bid_price,
+            created_date=datetime.now())
+        bid_id = Bid.objects.latest('id').id
+        bid_mail_notification(request, bid_id)
     return render(request, 'auction/data_generation.html', context)
+
+
+def maxPrice(auc):
+    max = Auction.objects.get(id=auc).min_price
+    try:
+        bid_max = Bid.objects.filter(auction_id=auc).order_by('-bid_price')[0].bid_price
+        if bid_max > max:
+            max = bid_max
+    except:
+        pass
+    return max
+
+
+def uniqueBidder(bid_ids, auc):
+    bid = random.choice(bid_ids)
+    if Auction.objects.get(id=auc).seller_id == bid:
+        uniqueBidder(bid_ids, auc)
+    return bid
 
 
 def auction_edit(request, id):
@@ -434,6 +477,7 @@ def auction_confirm(request, id):
             auction = Auction.objects.latest('id')
             _post_tasks(request, auction.id)
             _post_resolve(request, auction.id)
+            mail_auction_confirm_notification(request, request.session['id'])
             temp.delete()
         if request.session['language'] == "Eng":
             messages.success(request, 'Auction Added Successfully.')
@@ -489,6 +533,22 @@ def bid_mail_notification(request, bid_id):
     if is_connected():
         send_mail("New Auction", b_mailbody, "YAAS Admin", [b_email])
         send_mail("New Auction", s_mailbody, "YAAS Admin", [s_email])
+    else:
+        if request.session['language'] == "Eng":
+            messages.error(request, 'Network Error. Check your internet connection.')
+        else:
+            messages.error(request, 'Verkkovirhe. Tarkista Internet-yhteytesi.')
+    return
+
+
+def mail_auction_confirm_notification(request, id):
+    employeeobject = User.objects.get(id=id)
+    mailbody = "Dear " + employeeobject.username + "," + '\n' + '\n' \
+               + "An auction has been created successfully. " + '\n' + '\n'
+    email = employeeobject.email
+    mailbody = mailbody + '\n' + "Thanks." + '\n' + "YAAS Team."
+    if is_connected():
+        send_mail("New Auction", mailbody, "YAAS Admin", [email])
     else:
         if request.session['language'] == "Eng":
             messages.error(request, 'Network Error. Check your internet connection.')
