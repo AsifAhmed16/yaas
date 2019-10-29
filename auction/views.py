@@ -6,10 +6,12 @@ from .tasks import set_deadline, resolve_auction
 from django.core.mail import send_mail
 import socket
 from .models import *
+from account.models import Role
 import urllib.request
 import json
 from django.http import JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from faker import Faker
 
 
 class CurrencyConverter:
@@ -90,24 +92,22 @@ def auction_add(request):
 
 
 def auction_browse(request):
-    if 'logged_in' in request.session:
-        if request.session['logged_in'] is True:
-            userdata = {
-                'id': request.session['id'],
-                'username': request.session['username'],
-                'logged_in': request.session['logged_in'],
-                'language': request.session['language'],
-            }
-            list = Auction.objects.filter(status_id=Auction_Status.objects.get(status="Active").id)
-            context = {
-                'data': userdata,
-                'list': list
-            }
-            return render(request, 'auction/auction_browse.html', context)
-        else:
-            return redirect('account:login')
+    for each in range(50):
+        print(each)
+    context = dict()
+    if 'language' in request.session:
+        userdata = {
+            'language': request.session['language'],
+        }
     else:
-        return redirect('account:login')
+        request.session['language'] = "Eng"
+        userdata = {
+            'language': "Eng",
+        }
+    list = Auction.objects.filter(status_id=Auction_Status.objects.get(status="Active").id)
+    context['data'] = userdata
+    context['list'] = list
+    return render(request, 'auction/auction_browse.html', context)
 
 
 def auction_list(request):
@@ -155,9 +155,115 @@ def banned_auctions_list(request):
                     messages.error(request, 'Sinun on kirjauduttava sisään järjestelmänvalvojana selataksesi kiellettyjä huutokauppoja')
                 return redirect('account:index')
         else:
+            if request.session['language'] == "Eng":
+                messages.error(request, 'You need to login as Admin to browse banned auctions.')
+            else:
+                messages.error(request, 'Sinun on kirjauduttava sisään järjestelmänvalvojana selataksesi kiellettyjä huutokauppoja')
             return redirect('account:login')
     else:
+        if request.session['language'] == "Eng":
+            messages.error(request, 'You need to login as Admin to browse banned auctions.')
+        else:
+            messages.error(request, 'Sinun on kirjauduttava sisään järjestelmänvalvojana selataksesi kiellettyjä huutokauppoja')
         return redirect('account:login')
+
+
+def data_generation(request):
+    if 'logged_in' in request.session:
+        if request.session['logged_in'] is True:
+            if (User.objects.get(id=request.session['id']).role.role) == "Admin":
+                userdata = {
+                    'id': request.session['id'],
+                    'username': request.session['username'],
+                    'logged_in': request.session['logged_in'],
+                    'language': request.session['language'],
+                }
+                context = {
+                    'data': userdata,
+                    'list': list
+                }
+                return render(request, 'auction/data_generation.html', context)
+            else:
+                if request.session['language'] == "Eng":
+                    messages.error(request, 'You need to login as Admin to proceed.')
+                else:
+                    messages.error(request, 'Sinun on kirjauduttava sisään järjestelmänvalvojana jatkaaksesi.')
+                return redirect('account:index')
+        else:
+            if request.session['language'] == "Eng":
+                messages.error(request, 'You need to login as Admin to proceed.')
+            else:
+                messages.error(request, 'Sinun on kirjauduttava sisään järjestelmänvalvojana jatkaaksesi.')
+            return redirect('account:login')
+    else:
+        if request.session['language'] == "Eng":
+            messages.error(request, 'You need to login as Admin to proceed.')
+        else:
+            messages.error(request, 'Sinun on kirjauduttava sisään järjestelmänvalvojana jatkaaksesi.')
+        return redirect('account:login')
+
+
+def generate_user(request):
+    fake = Faker('fi_FI')
+    context = dict()
+    if 'language' in request.session:
+        userdata = {
+            'language': request.session['language'],
+        }
+    else:
+        request.session['language'] = "Eng"
+        userdata = {
+            'language': "Eng",
+        }
+    context['data'] = userdata
+
+    for each in range(50):
+        username = fake.name().replace(' ', '_').lower()
+        email = username + "@yaas.com"
+        User.objects.create(username=username, password=username, email=email, role=Role.objects.get(id=2), language=request.session['language'])
+    return render(request, 'auction/data_generation.html', context)
+
+
+def generate_auction(request):
+    fake = Faker('fi_FI')
+    context = dict()
+    if 'language' in request.session:
+        userdata = {
+            'language': request.session['language'],
+        }
+    else:
+        request.session['language'] = "Eng"
+        userdata = {
+            'language': "Eng",
+        }
+    context['data'] = userdata
+
+    for each in range(50):
+        username = fake.name().replace(' ', '_').lower()
+        email = username + "@yaas.com"
+        User.objects.create(username=username, password=username, email=email, role=Role.objects.get(id=2), language=request.session['language'])
+    return render(request, 'auction/data_generation.html', context)
+
+
+def generate_bid(request):
+    fake = Faker('fi_FI')
+    context = dict()
+    if 'language' in request.session:
+        userdata = {
+            'language': request.session['language'],
+        }
+    else:
+        request.session['language'] = "Eng"
+        userdata = {
+            'language': "Eng",
+        }
+    context['data'] = userdata
+
+    for each in range(50):
+        username = fake.name().replace(' ', '_').lower()
+        email = username + "@yaas.com"
+        User.objects.create(username=username, password=username, email=email, role=Role.objects.get(id=2), language=request.session['language'])
+    return render(request, 'auction/data_generation.html', context)
 
 
 def auction_edit(request, id):

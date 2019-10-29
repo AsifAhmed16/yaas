@@ -3,7 +3,13 @@
 {% block content %}
     <div class="container">
         <div class="section">
-            <p class="caption">List of Banned Auctions</p>
+            <p class="caption">
+                {% if data.language == "Eng" %}
+                    List of Banned Auctions
+                {% else %}
+                    Luettelo kielletyistä huutokaupoista
+                {% endif %}
+            </p>
             <div class="divider"></div>
             <div>
                 {% if messages %}
@@ -25,19 +31,38 @@
                 {% endif %}
             </div>
             <div id="bordered-table">
-                <h4 class="header">Banned By {{ data.username }}</h4>
+                <h4 class="header">
+                    {% if data.language == "Eng" %}
+                        Banned By {{ data.username }}
+                    {% else %}
+                        Kielletty {{ data.username }}
+                    {% endif %}
+                </h4>
                 <div class="row">
                     <div class="col s12 m4 l3">
-                        <p>Items ... </p>
+                        <p>
+                            {% if data.language == "Eng" %}
+                                Items ...
+                            {% else %}
+                                Tuotteet ...
+                            {% endif %}
+                        </p>
                     </div>
                     <div class="col s12 m8 l9">
                         <table class="bordered">
                             <thead>
                             <tr>
-                                <th data-field="id">Title</th>
-                                <th data-field="seller">Seller</th>
-                                <th data-field="name">Minimum Price</th>
-                                <th data-field="price">Deadline</th>
+                                {% if data.language == "Eng" %}
+                                    <th data-field="id">Title</th>
+                                    <th data-field="seller">Seller</th>
+                                    <th data-field="name">Minimum Price</th>
+                                    <th data-field="price">Deadline</th>
+                                {% else %}
+                                    <th data-field="id">Otsikko</th>
+                                    <th data-field="seller">Myyjä</th>
+                                    <th data-field="description">Kuvaus</th>
+                                    <th data-field="name">Aloitushinta</th>
+                                {% endif %}
                             </tr>
                             </thead>
                             <tbody>

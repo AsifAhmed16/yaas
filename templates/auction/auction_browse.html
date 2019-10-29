@@ -4,7 +4,13 @@
 {% block content %}
     <div class="container">
         <div class="section">
-            <p class="caption">List Products</p>
+            <p class="caption">
+                {% if data.language == "Eng" %}
+                    List Products
+                {% else %}
+                    Luettelo tuotteita
+                {% endif %}
+            </p>
             <div class="divider"></div>
             <div>
                 {% if messages %}
@@ -35,7 +41,13 @@
                                         <i class="mdi-action-account-circle prefix"></i>
                                         <input id="search" type="text" class="validate" placeholder="Search.."
                                                name="search">
-                                        <label for="search">Search</label>
+                                        <label for="search">
+                                            {% if data.language == "Eng" %}
+                                                Search
+                                            {% else %}
+                                                Hae
+                                            {% endif %}
+                                        </label>
                                     </div>
                                 </div>
                             </form>
@@ -45,7 +57,13 @@
             </div>
             <div class="divider"></div>
             <div id="bordered-table">
-                <h4 class="header">Active Items</h4>
+                <h4 class="header">
+                    {% if data.language == "Eng" %}
+                        Active Items
+                    {% else %}
+                        Aktiiviset tuotteet
+                    {% endif %}
+                </h4>
                 <div class="row">
                     <div class="col s12 m4 l3">
                         <p>Items ... </p>
@@ -54,11 +72,19 @@
                         <table class="bordered" id="browse">
                             <thead>
                             <tr>
-                                <th data-field="id">Title</th>
-                                <th data-field="name">Description</th>
-                                <th data-field="name">Minimum Price</th>
-                                <th data-field="price">Deadline</th>
-                                <th data-field="action">Action</th>
+                                {% if data.language == "Eng" %}
+                                    <th data-field="id">Title</th>
+                                    <th data-field="name">Description</th>
+                                    <th data-field="name">Minimum Price</th>
+                                    <th data-field="price">Deadline</th>
+                                    <th data-field="action">Action</th>
+                                {% else %}
+                                    <th data-field="id">Otsikko</th>
+                                    <th data-field="name">Kuvaus</th>
+                                    <th data-field="name">Aloitushinta</th>
+                                    <th data-field="price">Takaraja</th>
+                                    <th data-field="action">Toiminta</th>
+                                {% endif %}
                             </tr>
                             </thead>
                             <tbody>
@@ -71,11 +97,25 @@
                                     <td class="text-right">
                                         <ul class="dropdown-menu pull-right">
                                             <li>
-                                                <a href="{% url 'auction:auction_bid' data.id %}" class="btn waves-effect waves-light green"
-                                                   title="Edit"><i class="mdi-action-add-shopping-cart"></i> Bid</a>
+                                                <a href="{% url 'auction:auction_bid' data.id %}"
+                                                   class="btn waves-effect waves-light green"
+                                                   title="Edit"><i class="mdi-action-add-shopping-cart"></i>
+                                                    {% if data.language == "Eng" %}
+                                                        Bid
+                                                    {% else %}
+                                                        Tarjous
+                                                    {% endif %}
+                                                </a>
                                             </li>
-                                            <li><a href="{% url 'auction:auction_ban' data.id %}" class="btn waves-effect waves-light red"
-                                                   title="Edit"><i class="mdi-content-block"></i> Ban</a></li>
+                                            <li><a href="{% url 'auction:auction_ban' data.id %}"
+                                                   class="btn waves-effect waves-light red"
+                                                   title="Edit"><i class="mdi-content-block"></i>
+                                                {% if data.language == "Eng" %}
+                                                    Ban
+                                                {% else %}
+                                                    Kielto
+                                                {% endif %}
+                                            </a></li>
                                         </ul>
                                     </td>
                                 </tr>
@@ -85,19 +125,19 @@
                     </div>
                 </div>
             </div>
-{#            <div class="row">#}
-{#                <h4 class="header">Active Items</h4>#}
-{#                {% for data in list %}#}
-{#                    <article class="col s12 m6 l4">#}
-{#                        <div class="card light-blue">#}
-{#                            <div class="container">#}
-{#                                <h4><b>{{ data.title }}</b></h4>#}
-{#                                <p>{{ data }}</p>#}
-{#                            </div>#}
-{#                        </div>#}
-{#                    </article>#}
-{#                {% endfor %}#}
-{#            </div>#}
+            {#            <div class="row">#}
+            {#                <h4 class="header">Active Items</h4>#}
+            {#                {% for data in list %}#}
+            {#                    <article class="col s12 m6 l4">#}
+            {#                        <div class="card light-blue">#}
+            {#                            <div class="container">#}
+            {#                                <h4><b>{{ data.title }}</b></h4>#}
+            {#                                <p>{{ data }}</p>#}
+            {#                            </div>#}
+            {#                        </div>#}
+            {#                    </article>#}
+            {#                {% endfor %}#}
+            {#            </div>#}
         </div>
     </div>
 
@@ -122,14 +162,14 @@
                             var min_price = response[i]['min_price'];
                             var deadline = response[i]['deadline'];
                             $('#browse tbody').append('<tr>' +
-                                '<td>'+ title +'</td>' +
+                                '<td>' + title + '</td>' +
                                 '<td>' + description + '</td>' +
                                 '<td>' + min_price + '</td>' +
                                 '<td>' + deadline + '</td>' +
                                 '<td class="text-right">\n' +
                                 '   <ul class="dropdown-menu pull-right">\n' +
                                 '       <li>' +
-                                '            <a href="http://127.0.0.1:8009/auction/bid/'+ id_now +'/" id="obj" title="Bid">\n' +
+                                '            <a href="http://127.0.0.1:8009/auction/bid/' + id_now + '/" id="obj" title="Bid">\n' +
                                 '            <i class="mdi-action-add-shopping-cart"></i> Bid</a>\n' +
                                 '       </li>\n' +
                                 '   </ul>\n' +

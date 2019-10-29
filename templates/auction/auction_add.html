@@ -4,10 +4,27 @@
 
     <div class="container">
         <div class="section">
-            <p class="caption">Add an Auction.
-            <span style="float: right">
-                <a class="btn waves-effect waves-light purple" href="{% url 'auction:auction_browse' %}">Browse Auctions<i class="mdi-action-open-in-browser left"></i></a>
-                <a class="btn waves-effect waves-light grey" href="{% url 'auction:auction_list' %}">Created Auctions<i class="mdi-image-add-to-photos right"></i></a>
+            <p class="caption">
+                {% if data.language == "Eng" %}
+                    Add an Auction.
+                {% else %}
+                    Lisää huutokauppa
+                {% endif %}
+                <span style="float: right">
+                <a class="btn waves-effect waves-light purple" href="{% url 'auction:auction_browse' %}">
+                    {% if data.language == "Eng" %}
+                        Browse Auctions
+                    {% else %}
+                        Selaa huutokauppoja
+                    {% endif %}
+                    <i class="mdi-action-open-in-browser left"></i></a>
+                <a class="btn waves-effect waves-light grey" href="{% url 'auction:auction_list' %}">
+                    {% if data.language == "Eng" %}
+                        Created Auctions
+                    {% else %}
+                        Luotu huutokauppoja
+                    {% endif %}
+                    <i class="mdi-image-add-to-photos right"></i></a>
             </span>
             </p>
             <div class="divider"></div>
@@ -34,7 +51,13 @@
                 <div class="row">
                     <div class="col s8 m8 16" style="float: right">
                         <div class="card-panel">
-                            <h4 class="header2">Auction Form</h4>
+                            <h4 class="header2">
+                                {% if data.language == "Eng" %}
+                                    Auction Form
+                                {% else %}
+                                    Huutokaupan muoto
+                                {% endif %}
+                            </h4>
                             <div class="row">
                                 <form action="" class="col s12" method="post" enctype="multipart/form-data"
                                       id="auction_form">
@@ -55,7 +78,12 @@
                                     <div class="row">
                                         <div class="input-field col s12">
                                             <button class="btn cyan waves-effect waves-light right" type="submit"
-                                                    name="action">Submit
+                                                    name="action">
+                                                {% if data.language == "Eng" %}
+                                                    Submit
+                                                {% else %}
+                                                    Lähetä
+                                                {% endif %}
                                                 <i class="mdi-content-send right"></i>
                                             </button>
                                         </div>
@@ -89,13 +117,13 @@
                     closeOnConfirm: false,
                     closeOnCancel: false
                 },
-                function(isConfirm){
-                if (!(isConfirm)) {
-                    swal("Auction not created.", "success");
-                } else {
-                    $("#auction_form").unbind('submit').submit();
-                }
-            });
+                function (isConfirm) {
+                    if (!(isConfirm)) {
+                        swal("Auction not created.", "success");
+                    } else {
+                        $("#auction_form").unbind('submit').submit();
+                    }
+                });
         }
 
         {#        $(function () {#}

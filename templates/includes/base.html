@@ -98,6 +98,13 @@
                 Kieltää Huutokauppa
             {% endif %}
         </a></li>
+        <li><a href="{% url 'auction:data_generation' %}">
+            {% if data.language == "Eng" %}
+                Test & Data Generate
+            {% else %}
+                Testata Ja Datan luominen
+            {% endif %}
+        </a></li>
         {% if data.logged_in %}
             <li style="float: right; color: white">
                 <a href="{% url 'account:change_email' %}">

@@ -4,10 +4,21 @@
 {% block content %}
     <div class="container">
         <div class="section">
-            <p class="caption">Selected Auction.</p>
+            <p class="caption">
+                {% if data.language == "Eng" %}
+                    Selected Auction
+                {% else %}
+                    Valittu huutokauppa
+                {% endif %}
+            </p>
             <span style="float: right">
-                <a class="btn waves-effect waves-light grey" href="{% url 'auction:banned_auctions_list' %}">Browse Banned Auctions<i
-                        class="mdi-action-open-in-browser left"></i></a>
+                <a class="btn waves-effect waves-light grey" href="{% url 'auction:banned_auctions_list' %}">
+                    {% if data.language == "Eng" %}
+                        Browse Banned Auctions
+                    {% else %}
+                        Selaa kiellettyjä huutokauppoja
+                    {% endif %}
+                    <i class="mdi-action-open-in-browser left"></i></a>
             </span>
             <div class="divider"></div>
             <div>
@@ -30,13 +41,27 @@
                 {% endif %}
             </div>
             <div id="icon-prefixes" class="section">
-                <h4 class="header">Auction Details</h4>
+                <h4 class="header">
+                    {% if data.language == "Eng" %}
+                        Auction Details
+                    {% else %}
+                        Huutokaupan yksityiskohdat
+                    {% endif %}
+                </h4>
                 <div class="row">
                     <div class="col s12 m4 l3">
-                        <p>Title - {{ auc_obj.title }}<br>
-                            Description - {{ auc_obj.description }}<br>
-                            Starting Price - {{ auc_obj.min_price }} €<br>
-                            Deadline - {{ auc_obj.deadline }}<br>
+                        <p>
+                            {% if data.language == "Eng" %}
+                                Title - {{ auc_obj.title }}<br>
+                                Description - {{ auc_obj.description }}<br>
+                                Starting Price - {{ auc_obj.min_price }} €<br>
+                                Deadline - {{ auc_obj.deadline }}<br>
+                            {% else %}
+                                Otsikko - {{ auc_obj.title }}<br>
+                                Kuvaus - {{ auc_obj.description }}<br>
+                                Aloitushinta - {{ auc_obj.min_price }} €<br>
+                                Takaraja - {{ auc_obj.deadline }}<br>
+                            {% endif %}
                         </p>
                     </div>
                     <div class="col s12 m8 l9">
@@ -46,7 +71,12 @@
                                 <div class="row">
                                     <div class="input-field col s12">
                                         <button class="btn waves-effect waves-light red" type="submit"
-                                                name="action">Ban
+                                                name="action">
+                                            {% if data.language == "Eng" %}
+                                                Ban
+                                            {% else %}
+                                                Kielto
+                                            {% endif %}
                                             <i class="mdi-content-block right"></i>
                                         </button>
                                     </div>

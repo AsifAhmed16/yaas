@@ -25,9 +25,11 @@
         <div class="section">
             <p class="caption">
                 {% if data.language == "Eng" %}
-                    Welcome to YAAS - <span style="color: purple">{{ data.username }}</span>. YAAS is a web application and a web service to create and participate in auctions.
+                    Welcome to YAAS - <span style="color: purple">{{ data.username }}</span>. YAAS is a web application
+                    and a web service to create and participate in auctions.
                 {% else %}
-                    Tervetuloa että YAAS - {{ data.username }}. YAAS on verkkosovellus ja verkkopalvelu huutokauppojen luomiseen ja niihin osallistumiseen.
+                    Tervetuloa että YAAS - {{ data.username }}. YAAS on verkkosovellus ja verkkopalvelu huutokauppojen
+                    luomiseen ja niihin osallistumiseen.
                 {% endif %}
             </p>
             <div class="divider"></div>
@@ -53,21 +55,24 @@
                                         {% else %}
                                             Minimi Hinta
                                         {% endif %}
-                                        - €</sup>{{ each.min_price }}<sub>/EUR</sub></div>
+                                        - €</sup>{{ each.min_price }}<sub>/EUR</sub>
+                                    </div>
                                     <div class="price-desc">
                                         {% if data.language == "Eng" %}
                                             Posted On
                                         {% else %}
                                             Lähettäjä
                                         {% endif %}
-                                        - {{ each.created_date }}</div>
+                                        - {{ each.created_date }}
+                                    </div>
                                     <div class="price-desc">
                                         {% if data.language == "Eng" %}
                                             Deadline
                                         {% else %}
                                             Takaraja
                                         {% endif %}
-                                        - {{ each.deadline }}</div>
+                                        - {{ each.deadline }}
+                                    </div>
                                 </div>
                                 <div class="card-content">
                                     <ul class="collection" style="background-color: white">

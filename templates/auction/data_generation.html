@@ -1,0 +1,79 @@
+{% extends 'includes/base.html' %}
+
+{% block content %}
+
+    <div class="container">
+        <div class="section">
+            <p class="caption">
+                {% if data.language == "Eng" %}
+                    Test & Data Generate
+                {% else %}
+                    Testata Ja Datan luominen
+                {% endif %}
+            </p>
+            <div class="divider"></div>
+            <div>
+                {% if messages %}
+                    {% for message in messages %}
+                        {% if message.level_tag == 'error' %}
+                            <div id="card-alert" class="card red lighten-5">
+                                <div class="card-content red-text">
+                                    <p><strong>{{ message.message }}</strong></p>
+                                </div>
+                            </div>
+                        {% elif message.level_tag == 'success' %}
+                            <div id="card-alert" class="card green lighten-5">
+                                <div class="card-content green-text">
+                                    <p>{{ message.message }}</p>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                {% endif %}
+            </div>
+            <div id="basic-form" class="section">
+                <div class="row">
+                    <div class="col s8 m8 16" style="float: right">
+                        <div class="card-panel">
+                            <div class="row">
+                                <div class="row">
+                                    <div class="input-field col s2">
+                                        <a href="{% url 'auction:generate_user' %}" class="btn cyan waves-effect waves-light right" name="action">
+                                            {% if data.language == "Eng" %}
+                                                Submit
+                                            {% else %}
+                                                Lähetä
+                                            {% endif %}
+                                            <i class="mdi-content-send right"></i>
+                                        </a>
+                                    </div>
+                                    <div class="input-field col s2">
+                                        <a href="{% url 'auction:generate_auction' %}" class="btn cyan waves-effect waves-light right" name="action">
+                                            {% if data.language == "Eng" %}
+                                                Submit
+                                            {% else %}
+                                                Lähetä
+                                            {% endif %}
+                                            <i class="mdi-content-send right"></i>
+                                        </a>
+                                    </div>
+                                    <div class="input-field col s2">
+                                        <a href="{% url 'auction:generate_bid' %}" class="btn cyan waves-effect waves-light right" name="action">
+                                            {% if data.language == "Eng" %}
+                                                Submit
+                                            {% else %}
+                                                Lähetä
+                                            {% endif %}
+                                            <i class="mdi-content-send right"></i>
+                                        </a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}

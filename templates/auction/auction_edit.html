@@ -4,7 +4,13 @@
 
     <div class="container">
         <div class="section">
-            <p class="caption">Selected Auction.</p>
+            <p class="caption">
+                {% if data.language == "Eng" %}
+                    Selected Auction
+                {% else %}
+                    Valittu huutokauppa
+                {% endif %}
+            </p>
             <div class="divider"></div>
             <div>
                 {% if messages %}
@@ -29,18 +35,36 @@
                 <div class="row">
                     <div class="col s8 m8 16" style="float: right">
                         <div class="card-panel">
-                            <h4 class="header2">Auction Edit</h4>
+                            <h4 class="header2">
+                                {% if data.language == "Eng" %}
+                                    Auction Edit
+                                {% else %}
+                                    Huutokaupan muokkaus
+                                {% endif %}
+                            </h4>
                             <div class="row">
                                 <form action="" class="col s12" method="post" enctype="multipart/form-data">
                                     {% csrf_token %}
                                     <div class="input-field col s12">
-                                        <input id="description" name="description" type="text" value="{{ description }}"/>
-                                        <label for="description">Description</label>
+                                        <input id="description" name="description" type="text"
+                                               value="{{ description }}"/>
+                                        <label for="description">
+                                            {% if data.language == "Eng" %}
+                                                Description
+                                            {% else %}
+                                                Kuvaus
+                                            {% endif %}
+                                        </label>
                                     </div>
                                     <div class="row">
                                         <div class="input-field col s12">
                                             <button class="btn cyan waves-effect waves-light right" type="submit"
-                                                    name="action">Submit
+                                                    name="action">
+                                                {% if data.language == "Eng" %}
+                                                    Submit
+                                                {% else %}
+                                                    Lähetä
+                                                {% endif %}
                                                 <i class="mdi-content-send right"></i>
                                             </button>
                                         </div>

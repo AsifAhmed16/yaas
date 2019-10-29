@@ -5,7 +5,13 @@
 
     <div class="container">
         <div class="section">
-            <p class="caption">Selected Auction.</p>
+            <p class="caption">
+                {% if data.language == "Eng" %}
+                    Selected Auction
+                {% else %}
+                    Valittu huutokauppa
+                {% endif %}
+            </p>
             <div class="divider"></div>
             <div>
                 {% if messages %}
@@ -27,14 +33,29 @@
                 {% endif %}
             </div>
             <div id="icon-prefixes" class="section">
-                <h4 class="header">Auction Details</h4>
+                <h4 class="header">
+                    {% if data.language == "Eng" %}
+                        Auction Details
+                    {% else %}
+                        Huutokaupan yksityiskohdat
+                    {% endif %}
+                </h4>
                 <div class="row">
                     <div class="col s12 m4 l3">
-                        <p>Title - {{ auc_obj.title }}<br>
-                            Description - {{ auc_obj.description }}<br>
-                            Starting Price - {{ auc_obj.min_price }} €<br>
-                            Deadline - {{ auc_obj.deadline }}<br>
-                            Minimum Bid - {{ min_bid }} €<br>
+                        <p>
+                            {% if data.language == "Eng" %}
+                                Title - {{ auc_obj.title }}<br>
+                                Description - {{ auc_obj.description }}<br>
+                                Starting Price - {{ auc_obj.min_price }} €<br>
+                                Deadline - {{ auc_obj.deadline }}<br>
+                                Minimum Bid - {{ min_bid }} €<br>
+                            {% else %}
+                                Otsikko - {{ auc_obj.title }}<br>
+                                Kuvaus - {{ auc_obj.description }}<br>
+                                Aloitushinta - {{ auc_obj.min_price }} €<br>
+                                Takaraja - {{ auc_obj.deadline }}<br>
+                                Minimihinta - {{ min_bid }}<br>
+                            {% endif %}
                         </p>
                     </div>
                     <div class="col s12 m8 l9">
@@ -43,32 +64,49 @@
                                 {% csrf_token %}
                                 <div class="input-field col s4">
                                     <i class="mdi-maps-local-atm prefix"></i>
-                                    <label>Currency List</label>
+                                    <label>
+                                        {% if data.language == "Eng" %}
+                                            Currency List
+                                        {% else %}
+                                            Valuuttalista
+                                        {% endif %}
+                                    </label>
                                     <br>
                                     <p>
-                                        <input checked name="group1" type="radio" id="eur" onclick="setCurrency(this.id)"/>
+                                        <input checked name="group1" type="radio" id="eur"
+                                               onclick="setCurrency(this.id)"/>
                                         <label for="eur">EUR/€</label>
                                     </p>
                                     <p>
-                                        <input class="with-gap" name="group1" type="radio" id="usd" onclick="setCurrency(this.id)"/>
+                                        <input class="with-gap" name="group1" type="radio" id="usd"
+                                               onclick="setCurrency(this.id)"/>
                                         <label for="usd">USD/$</label>
                                     </p>
                                     <p>
-                                        <input class="with-gap" name="group1" type="radio" id="cad" onclick="setCurrency(this.id)"/>
+                                        <input class="with-gap" name="group1" type="radio" id="cad"
+                                               onclick="setCurrency(this.id)"/>
                                         <label for="cad">CAD</label>
                                     </p>
                                     <p>
-                                        <input class="with-gap" name="group1" type="radio" id="bdt" onclick="setCurrency(this.id)"/>
+                                        <input class="with-gap" name="group1" type="radio" id="bdt"
+                                               onclick="setCurrency(this.id)"/>
                                         <label for="bdt">BDT</label>
                                     </p>
                                 </div>
                                 <div class="input-field col s6">
                                     <i class="mdi-editor-attach-money prefix"></i>
-                                    <input id="bid_amount" name="bid_amount" type="number" step="0.01" class="validate" required>
-                                    <label for="bid_amount">Amount</label>
+                                    <input id="bid_amount" name="bid_amount" type="number" step="0.01" class="validate"
+                                           required>
+                                    <label for="bid_amount">
+                                        {% if data.language == "Eng" %}
+                                            Amount
+                                        {% else %}
+                                            Määrä
+                                        {% endif %}
+                                    </label>
                                 </div>
                                 <div id="convert_div" class="input-field col s2">
-                                    <input id="amount" name="amount" type="number" readonly value="0" />
+                                    <input id="amount" name="amount" type="number" readonly value="0"/>
                                     <label for="amount">In EUR(€) ... </label>
                                 </div>
                                 <input type="hidden" id="currency" name="currency" value="eur">
@@ -76,7 +114,12 @@
                                 <div class="row">
                                     <div class="input-field col s12">
                                         <button class="btn cyan waves-effect waves-light right" type="submit"
-                                                name="action">Submit
+                                                name="action">
+                                            {% if data.language == "Eng" %}
+                                                Submit
+                                            {% else %}
+                                                Lähetä
+                                            {% endif %}
                                             <i class="mdi-content-send right"></i>
                                         </button>
                                     </div>
@@ -93,17 +136,17 @@
 
     <script>
         $(document).ready(function () {
-            $( '#convert_div' ).hide();
+            $('#convert_div').hide();
 
             var activities = document.getElementById("bid_amount");
             activities.addEventListener("input", function () {
                 var bid_amount = document.getElementById('bid_amount').value;
                 var currency = document.getElementById('currency').value;
-                if (currency == "eur"){
+                if (currency == "eur") {
                     document.getElementById("amount").value = bid_amount;
                 }
                 $.ajax({
-                    url: '/auction/convert/' + bid_amount + '/'  + currency + '/',
+                    url: '/auction/convert/' + bid_amount + '/' + currency + '/',
                     type: 'post',
                     data: {depart: bid_amount, currency},
                     dataType: 'json',
@@ -117,7 +160,7 @@
                 event.preventDefault();
                 var min_price = document.getElementById("min_price").value;
                 var amount = document.getElementById("amount").value;
-                if (parseFloat(amount) > parseFloat(min_price) ){
+                if (parseFloat(amount) > parseFloat(min_price)) {
                     $("#bid_form").unbind('submit').submit();
                 } else {
                     swal("Bid a bigger amount...");
@@ -129,10 +172,10 @@
             document.getElementById("bid_amount").value = 0.00;
             document.getElementById("amount").value = 0.00;
             document.getElementById("currency").value = c_id;
-            if (c_id != "eur"){
-                $( '#convert_div' ).show();
+            if (c_id != "eur") {
+                $('#convert_div').show();
             } else {
-                $( '#convert_div' ).hide();
+                $('#convert_div').hide();
             }
         }
     </script>
