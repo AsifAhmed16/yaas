@@ -37,30 +37,30 @@
                         <div class="card-panel">
                             <div class="row">
                                 <div class="row">
-                                    <div class="input-field col s2">
+                                    <div class="input-field col s4">
                                         <a href="{% url 'auction:generate_user' %}" class="btn cyan waves-effect waves-light right" name="action">
                                             {% if data.language == "Eng" %}
-                                                Create User List
+                                                Create User
                                             {% else %}
                                                 Lähetä
                                             {% endif %}
                                             <i class="mdi-content-send right"></i>
                                         </a>
                                     </div>
-                                    <div class="input-field col s2">
+                                    <div class="input-field col s4">
                                         <a href="{% url 'auction:generate_auction' %}" class="btn cyan waves-effect waves-light right" name="action">
                                             {% if data.language == "Eng" %}
-                                                Create Auction List
+                                                Create Auction
                                             {% else %}
                                                 Lähetä
                                             {% endif %}
                                             <i class="mdi-content-send right"></i>
                                         </a>
                                     </div>
-                                    <div class="input-field col s2">
+                                    <div class="input-field col s4">
                                         <a href="{% url 'auction:generate_bid' %}" class="btn cyan waves-effect waves-light right" name="action">
                                             {% if data.language == "Eng" %}
-                                                Create Bid List
+                                                Create Bid
                                             {% else %}
                                                 Lähetä
                                             {% endif %}
