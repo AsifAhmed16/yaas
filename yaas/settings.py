@@ -82,9 +82,10 @@ LOGOUT_REDIRECT_URL = '/'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
+        # 'NAME': 'yaas_database',
         'NAME': 'yaas_db',
         'USER': 'root',
-        'PASSWORD': '000016',
+        'PASSWORD': '123456',
         'HOST': '127.0.0.1',
         'PORT': '',
     }
