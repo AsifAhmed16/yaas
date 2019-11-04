@@ -93,11 +93,12 @@ def auction_add(request):
 
 
 def auction_browse(request):
-    for each in range(50):
-        print(each)
     context = dict()
     if 'language' in request.session:
         userdata = {
+            'id': request.session['id'],
+            'username': request.session['username'],
+            'logged_in': request.session['logged_in'],
             'language': request.session['language'],
         }
     else:
@@ -209,6 +210,9 @@ def generate_user(request):
     context = dict()
     if 'language' in request.session:
         userdata = {
+            'id': request.session['id'],
+            'username': request.session['username'],
+            'logged_in': request.session['logged_in'],
             'language': request.session['language'],
         }
     else:
@@ -221,6 +225,7 @@ def generate_user(request):
     for each in range(50):
         username = fake.name().replace(' ', '_').lower()
         User.objects.create(username=username, password=username, email=fake.email(), role=Role.objects.get(id=2), language=request.session['language'])
+    messages.success(request, 'User generated successfully.')
     return render(request, 'auction/data_generation.html', context)
 
 
@@ -229,6 +234,9 @@ def generate_auction(request):
     context = dict()
     if 'language' in request.session:
         userdata = {
+            'id': request.session['id'],
+            'username': request.session['username'],
+            'logged_in': request.session['logged_in'],
             'language': request.session['language'],
         }
     else:
@@ -255,6 +263,7 @@ def generate_auction(request):
         _post_tasks(request, auction.id)
         _post_resolve(request, auction.id)
         # mail_auction_confirm_notification(request, seller_id)
+    messages.success(request, 'Auction generated successfully.')
     return render(request, 'auction/data_generation.html', context)
 
 
@@ -262,6 +271,9 @@ def generate_bid(request):
     context = dict()
     if 'language' in request.session:
         userdata = {
+            'id': request.session['id'],
+            'username': request.session['username'],
+            'logged_in': request.session['logged_in'],
             'language': request.session['language'],
         }
     else:
@@ -288,6 +300,7 @@ def generate_bid(request):
             created_date=datetime.now())
         bid_id = Bid.objects.latest('id').id
         bid_mail_notification(request, bid_id)
+    messages.success(request, 'Bid generated successfully.')
     return render(request, 'auction/data_generation.html', context)
 
 

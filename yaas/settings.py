@@ -40,6 +40,7 @@ INSTALLED_APPS = [
     'background_task',
     'account',
     'auction',
+    'testApp'
 ]
 
 MIDDLEWARE = [
@@ -82,8 +83,7 @@ LOGOUT_REDIRECT_URL = '/'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        # 'NAME': 'yaas_database',
-        'NAME': 'yaas_db',
+        'NAME': 'yaas_database',
         'USER': 'root',
         'PASSWORD': '123456',
         'HOST': '127.0.0.1',
