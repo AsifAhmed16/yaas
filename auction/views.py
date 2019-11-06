@@ -445,10 +445,6 @@ def auction_bid(request, id):
                 messages.error(request, 'Ole hyvä ja kirjaudu sisään ennen huutokaupan tarjoamista')
             return redirect('account:login')
     else:
-        if request.session['language'] == "Eng":
-            messages.error(request, 'Please login before bidding an auction.')
-        else:
-            messages.error(request, 'Ole hyvä ja kirjaudu sisään ennen huutokaupan tarjoamista')
         return redirect('account:login')
 
 

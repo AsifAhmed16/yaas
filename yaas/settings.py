@@ -85,7 +85,7 @@ DATABASES = {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': 'yaas_database',
         'USER': 'root',
-        'PASSWORD': '123456',
+        'PASSWORD': '000016',
         'HOST': '127.0.0.1',
         'PORT': '',
     }

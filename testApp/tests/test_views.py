@@ -8,7 +8,6 @@ class TestViews(TestCase):
         self.client = Client()
         self.list_url = reverse('list')
         self.auc_url = reverse('auction_add')
-        self.bid_url = reverse('generate_bid')
 
     def test_language_store(self):
         response = self.client.get(self.list_url)
