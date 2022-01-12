@@ -116,8 +116,8 @@ AUTH_PASSWORD_VALIDATORS = [
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'ahmed.as.if.16@gmail.com'
-EMAIL_HOST_PASSWORD = '73585212'
+EMAIL_HOST_USER = 'gmail.com'
+EMAIL_HOST_PASSWORD = ''
 EMAIL_PORT = 587
 
 # Internationalization
